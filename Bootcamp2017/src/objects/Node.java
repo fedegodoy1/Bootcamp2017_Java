@@ -5,14 +5,14 @@ package objects;
  * @author federico
  */
 public class Node {
-    private Comparable info;
+    private Day info;
     private Node next;
    
     public Node ( )
     {
     }
 
-    public Node (Comparable x, Node p)
+    public Node (Day x, Node p)
     {
      info = x;
      next = p;
@@ -28,12 +28,12 @@ public class Node {
      next = p;
     }
 
-    public Comparable getInfo()
+    public Day getInfo()
     {
      return info;
     }
 
-    public void setInfo(Comparable p)
+    public void setInfo(Day p)
     {
      if( p != null ) info = p;
     }

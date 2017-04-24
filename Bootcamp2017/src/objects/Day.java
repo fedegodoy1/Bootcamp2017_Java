@@ -4,7 +4,7 @@ package objects;
  *
  * @author federico
  */
-public class Day {
+public class Day{
     private String name;
     private String date;
     private String description;
@@ -72,7 +72,6 @@ public class Day {
     @Override
     public String toString() {
         return "Day: " + name + ", date: " + date + ", description: " + description + 
-                ", high temperature: " + highTemp + ", low temperature: " + lowTemp + ", current temperature: " + currentTemp;
-    }
-    
+                ", high temperature: " + highTemp + ", low temperature: " + lowTemp + ", current temperature: " + currentTemp + "\n";
+    } 
 }

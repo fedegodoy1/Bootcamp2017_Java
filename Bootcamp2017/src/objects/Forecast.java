@@ -18,14 +18,16 @@ public class Forecast {
         cantidad = 0;
     }
       
-    private boolean isHomogeneus (Comparable x)
+    private boolean isHomogeneus (Day x)
     {
-        if ( x == null ) return false;
+        if ( x == null ){
+            return false;
+        }
         if ( frente != null && x.getClass() != frente.getInfo().getClass() ) return false;
         return true;
     }
       
-    public void add( int index, Comparable x )
+    public void add( int index, Day x )
     {
         if( isHomogeneus( x ) ) {
         } else {
@@ -54,7 +56,7 @@ public class Forecast {
         cantidad++;
     }
       
-    public void addFirst( Comparable x )
+    public void addFirst( Day x )
     {
         if ( isHomogeneus( x ) ) {
         } else {
@@ -65,18 +67,18 @@ public class Forecast {
         cantidad++;
     }  
       
-    public Comparable search (Comparable x)
+    public Day search (String dateDay)
     {
-        if ( ! isHomogeneus( x ) )  return null;
-
         for ( Node p = frente; p != null; p = p.getNext() )
         {
-            if( x.compareTo( p.getInfo() ) == 0 ) return p.getInfo();
+            String a = p.getInfo().getName();
+            String b = dateDay;
+            if( b.equals(a) ) return p.getInfo();
         }
         return null;
     }
     
-    public Comparable remove( int index )
+    public Day remove( int index )
     {
         if( index < 0 || index >= size() ) {
             throw new IndexOutOfBoundsException( "Indice fuera del rango" );
@@ -89,7 +91,7 @@ public class Forecast {
             p = p.getNext();
         }
 
-        Comparable x = p.getInfo();
+        Day x = p.getInfo();
         if( q == null ) {
             frente = p.getNext();
         }
@@ -101,7 +103,7 @@ public class Forecast {
         return x; 
     }
     
-    public Comparable set( int index, Comparable x )
+    public Day set( int index, Day x )
     {
         if( isHomogeneus( x ) ) {
         } else {
@@ -114,7 +116,7 @@ public class Forecast {
             p = p.getNext();
         }
 
-        Comparable ant = p.getInfo();
+        Day ant = p.getInfo();
         p.setInfo( x );
         return ant;
     }
@@ -123,5 +125,18 @@ public class Forecast {
     public int size()
     {
         return cantidad;
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder res = new StringBuilder( "\n[ " );
+        for( Node p = frente; p != null;  p = p.getNext() )
+        {
+            res.append( p.toString() );
+            if ( p.getNext() != null ) res.append( " - " );
+        }
+        res.append( " ]" );
+        return res.toString();
     }
 }
