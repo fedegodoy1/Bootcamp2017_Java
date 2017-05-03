@@ -8,17 +8,19 @@ public class Day{
     private String name;
     private String date;
     private String description;
-    private String highTemp;
-    private String lowTemp;
-    private String currentTemp;
+    private Location location;
+    private Atmosphere atmosphere;
+    private Wind wind;
+    private Temperature temp;
 
-    public Day(String name, String date, String description, String highTemp, String lowTemp, String currentTemp) {
+    public Day(String name, String date, String description, Location location, Atmosphere atmosphere, Wind wind, Temperature temp) {
         this.name = name;
         this.date = date;
         this.description = description;
-        this.highTemp = highTemp;
-        this.lowTemp = lowTemp;
-        this.currentTemp = currentTemp;
+        this.location = location;
+        this.atmosphere = atmosphere;
+        this.wind = wind;
+        this.temp = temp;
     }
 
     public String getName() {
@@ -45,33 +47,44 @@ public class Day{
         this.description = description;
     }
 
-    public String getHighTemp() {
-        return highTemp;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setHighTemp(String highTemp) {
-        this.highTemp = highTemp;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
-    public String getLowTemp() {
-        return lowTemp;
+    public Atmosphere getAtmosphere() {
+        return atmosphere;
     }
 
-    public void setLowTemp(String lowTemp) {
-        this.lowTemp = lowTemp;
+    public void setAtmosphere(Atmosphere atmosphere) {
+        this.atmosphere = atmosphere;
     }
 
-    public String getcurrentTemp() {
-        return currentTemp;
+    public Wind getWind() {
+        return wind;
     }
 
-    public void setActTemp(String currentTemp) {
-        this.currentTemp = currentTemp;
+    public void setWind(Wind wind) {
+        this.wind = wind;
+    }
+
+    public Temperature getTemp() {
+        return temp;
+    }
+
+    public void setTemp(Temperature temp) {
+        this.temp = temp;
     }
 
     @Override
     public String toString() {
-        return "Day: " + name + ", date: " + date + ", description: " + description + 
-                ", high temperature: " + highTemp + ", low temperature: " + lowTemp + ", current temperature: " + currentTemp + "\n";
-    } 
+        return "\nDay-----------------\n" + 
+                "Name: " + name + ", date: " + date + ", description: " + description + ", " + location.toString() + ", " + atmosphere.toString() + ", " + wind.toString() + ", " + temp.toString();
+    }
+    
+    
+    
 }
