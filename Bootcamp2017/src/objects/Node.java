@@ -5,14 +5,14 @@ package objects;
  * @author federico
  */
 public class Node {
-    private Day info;
+    private Object info;
     private Node next;
    
     public Node ( )
     {
     }
 
-    public Node (Day x, Node p)
+    public Node (Object x, Node p)
     {
      info = x;
      next = p;
@@ -28,12 +28,12 @@ public class Node {
      next = p;
     }
 
-    public Day getInfo()
+    public Object getInfo()
     {
      return info;
     }
 
-    public void setInfo(Day p)
+    public void setInfo(Object p)
     {
      if( p != null ) info = p;
     }

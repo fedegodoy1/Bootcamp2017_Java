@@ -18,7 +18,7 @@ public class Forecast {
         cantidad = 0;
     }
       
-    private boolean isHomogeneus (Day x)
+    private boolean isHomogeneus (Object x)
     {
         if ( x == null ){
             return false;
@@ -27,7 +27,7 @@ public class Forecast {
         return true;
     }
       
-    public void add( int index, Day x )
+    public void add( int index, Object x )
     {
         if( isHomogeneus( x ) ) {
         } else {
@@ -56,7 +56,7 @@ public class Forecast {
         cantidad++;
     }
       
-    public void addFirst( Day x )
+    public void addFirst( Object x )
     {
         if ( isHomogeneus( x ) ) {
         } else {
@@ -69,14 +69,31 @@ public class Forecast {
       
     public Day search (String dateDay)
     {
+        Day d;
         for ( Node p = frente; p != null; p = p.getNext() )
         {
-            String a = p.getInfo().getName();
+            d = (Day) p.getInfo();
+            String a = d.getName();
             String b = dateDay;
-            if( b.equals(a) ) return p.getInfo();
+            if( b.equals(a) ) return d;
         }
         return null;
     }
+    
+    public Object get( int index )
+      {
+          if( index < 0 || index >= size() ) {
+              throw new IndexOutOfBoundsException( "Indice fuera del rango" );
+          }
+         
+          Node p = frente;
+          for( int i = 0; i < index; i++ ) 
+          { 
+              p = p.getNext(); 
+          }
+          
+          return p.getInfo();
+      }
     
     public Day remove( int index )
     {
@@ -91,7 +108,7 @@ public class Forecast {
             p = p.getNext();
         }
 
-        Day x = p.getInfo();
+        Day x = (Day) p.getInfo();
         if( q == null ) {
             frente = p.getNext();
         }
@@ -103,7 +120,7 @@ public class Forecast {
         return x; 
     }
     
-    public Day set( int index, Day x )
+    public Day set( int index, Object x )
     {
         if( isHomogeneus( x ) ) {
         } else {
@@ -116,7 +133,7 @@ public class Forecast {
             p = p.getNext();
         }
 
-        Day ant = p.getInfo();
+        Day ant = (Day) p.getInfo();
         p.setInfo( x );
         return ant;
     }
