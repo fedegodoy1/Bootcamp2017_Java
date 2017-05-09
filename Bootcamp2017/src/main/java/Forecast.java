@@ -136,8 +136,8 @@ public class Forecast {
         p.setInfo( x );
         return ant;
     }
+    
 
-      
     public int size()
     {
         return cantidad;
