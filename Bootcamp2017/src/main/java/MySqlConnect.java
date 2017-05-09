@@ -16,7 +16,7 @@ public class MySqlConnect {
     private static final String MAX_POOL = "250";
 
     // init connection object
-    private Connection connection;
+    private static Connection connection = null;
     // init properties object
     private Properties properties;
     
@@ -30,7 +30,7 @@ public class MySqlConnect {
         }
         return properties;
     }
-    public Connection connect() {
+    private MySqlConnect() {
         if (connection == null) {
             try {
                 Class.forName(DATABASE_DRIVER);
@@ -39,7 +39,6 @@ public class MySqlConnect {
                 e.printStackTrace();
             }
         }
-        return connection;
     }
     
     public void disconnect() {
@@ -51,5 +50,12 @@ public class MySqlConnect {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public static Connection getConnection(){
+        if (connection == null){
+            new MySqlConnect();
+        }
+        return connection;
     }
 }

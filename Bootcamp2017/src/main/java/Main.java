@@ -32,7 +32,7 @@ public class Main {
         float hTemp = 16;
         float lTemp = 10;
         Temperature t1 = new Temperature(cTemp,hTemp,lTemp);
-        Day day1 = new Day("Viernes","05/05","Sunny",l1,a1,w1,t1);
+        Day day1 = new Day("Miercoles","10/05","Sunny",l1,a1,w1,t1);
         
         //--------------------------
         
@@ -51,7 +51,7 @@ public class Main {
         float hTemp2 = 27;
         float lTemp2 = 20;
         Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
-        Day day2= new Day("Sábado","06/05","Cloudy",l2,a2,w2,t2);
+        Day day2= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
         
         list.addFirst( day2 );
         list.addFirst( day1 );
@@ -102,7 +102,6 @@ public class Main {
             System.out.println("- Dia encontrado!");
         }
         
-        MySqlConnect mysql = new MySqlConnect();
 //        System.out.println("--------------------------");
 //        System.out.println("Connecting database...");
 //        try (Connection connection = mysql.connect()) {
@@ -111,51 +110,51 @@ public class Main {
 //        } catch (SQLException e) {
 //            throw new IllegalStateException("Cannot connect the database!", e);
 //        }
-        
+        Connection connect = MySqlConnect.getConnection();
         for (int i = 0; i < list.size(); i++) {
             Day insert = (Day) list.get(i);
             
             String sqlatmosphere = "INSERT INTO "
                     + "forecast.atmosphere(atmosphere.idAtmosphere,atmosphere.humidity,atmosphere.pressure,atmosphere.visibility) "
-                    + "values ("+ i+3 +","+ insert.getAtmosphere().getHumididy() +","+ insert.getAtmosphere().getPressure() + ", "+ insert.getAtmosphere().getVisibility()+")";
+                    + "values ("+ buscarUltimoId(connect,"atmosphere") +","+ insert.getAtmosphere().getHumididy() +","+ insert.getAtmosphere().getPressure() + ", "+ insert.getAtmosphere().getVisibility()+")";
             try {
-                PreparedStatement statement = mysql.connect().prepareStatement(sqlatmosphere);
+                PreparedStatement statement = connect.prepareStatement(sqlatmosphere);
                 statement.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             String sqlLocation = "insert into forecast.location(location.idLocation, location.city, location.country,location.region)" 
-                    +"values("+ i+3 +",'"+ insert.getLocation().getCity() +"', '"+ insert.getLocation().getCountry() +"','"+ insert.getLocation().getRegion() +"')";
+                    +"values("+ buscarUltimoId(connect,"location") +",'"+ insert.getLocation().getCity() +"', '"+ insert.getLocation().getCountry() +"','"+ insert.getLocation().getRegion() +"')";
             try {
-                PreparedStatement statement = mysql.connect().prepareStatement(sqlLocation);
+                PreparedStatement statement = connect.prepareStatement(sqlLocation);
                 statement.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             String sqlWind ="insert into forecast.wind(wind.idWind, wind.direction, wind.speed) "
-                    + "values("+ i+3 +",'"+ insert.getWind().getDirection()+"',"+ insert.getWind().getSpeed()+")";
+                    + "values("+ buscarUltimoId(connect,"wind")+",'"+ insert.getWind().getDirection()+"',"+ insert.getWind().getSpeed()+")";
             try {
-                PreparedStatement statement = mysql.connect().prepareStatement(sqlWind);
+                PreparedStatement statement = connect.prepareStatement(sqlWind);
                 statement.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             String sqlTemp = "insert into forecast.temperature(temperature.idTemperature, temperature.currentTemperature, temperature.highTemperature, temperature.lowTemperature) "
-                    + "values("+ i+3 +","+ insert.getTemp().getCurrentTemperature() +","+insert.getTemp().getHighTemperature() +","+ insert.getTemp().getLowTemperature()+")";
+                    + "values("+ buscarUltimoId(connect,"temperature") +","+ insert.getTemp().getCurrentTemperature() +","+insert.getTemp().getHighTemperature() +","+ insert.getTemp().getLowTemperature()+")";
             try {
-                PreparedStatement statement = mysql.connect().prepareStatement(sqlTemp);
+                PreparedStatement statement = connect.prepareStatement(sqlTemp);
                 statement.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             String sqlDay = "insert into forecast.day(day.idDay, day.name, day.date, day.description,day.idAtmosphere,day.idLocation,day.idTemperature,day.idWind) "
-                    + "values ("+ i+3 +",'"+insert.getName()+"','"+insert.getDate()+"','"+ insert.getDescription()+"',"+ i +","+ i +","+ i +","+ i +")";
+                    + "values ("+ buscarUltimoId(connect,"day") +",'"+insert.getName()+"','"+insert.getDate()+"','"+ insert.getDescription()+"',"+ i +","+ i +","+ i +","+ i +")";
             try {
-                PreparedStatement statement = mysql.connect().prepareStatement(sqlDay);
+                PreparedStatement statement = connect.prepareStatement(sqlDay);
                 statement.executeUpdate();
                 System.out.println("Dia "+insert.getName()+" almacenado");
             } catch (SQLException ex) {
@@ -165,7 +164,7 @@ public class Main {
         
         System.out.println("Dias almacenados en base de datos: ");
         try {
-            Statement stObtener = mysql.connect().createStatement();
+            Statement stObtener = connect.createStatement();
             ResultSet rs = stObtener.executeQuery("SELECT d.name,d.date,d.description,a.humidity,l.city,t.currentTemperature \n" +
                                                   "FROM forecast.day d, forecast.atmosphere a, forecast.location l, forecast.temperature t\n" +
                                                   "WHERE d.idLocation = l.idLocation and d.idTemperature = t.idTemperature and d.idAtmosphere=a.idAtmosphere");
@@ -180,12 +179,82 @@ public class Main {
             }
             rs.close();
             stObtener.close();
-            mysql.disconnect();
+            connect.close();
         } catch (SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
+    
+    public static String buscarUltimoId(Connection conexion,String tipo){
+        String ultimo = "";
+        Statement stObtener;
+        
+        switch(tipo){
+            case "atmosphere":
+                try {
+                    stObtener = conexion.createStatement();
+                    ResultSet rs = stObtener.executeQuery("SELECT COUNT(a.idAtmosphere) as Cantidad " +
+                                                          "FROM forecast.atmosphere a");
+                    while(rs.next()){
+                        ultimo = ""+rs.getString("Cantidad");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+                
+            case "location":
+                try {
+                    stObtener = conexion.createStatement();
+                    ResultSet rs = stObtener.executeQuery("SELECT COUNT(l.idLocation) as Cantidad " +
+                                                          "FROM forecast.location l");
+                    while(rs.next()){
+                        ultimo = ""+rs.getString("Cantidad");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case "temperature":
+                try {
+                    stObtener = conexion.createStatement();
+                    ResultSet rs = stObtener.executeQuery("SELECT COUNT(t.idTemperature) as Cantidad " +
+                                                          "FROM forecast.temperature t");
+                    while(rs.next()){
+                        ultimo = ""+rs.getString("Cantidad");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case "wind":
+                try {
+                    stObtener = conexion.createStatement();
+                    ResultSet rs = stObtener.executeQuery("SELECT COUNT(w.idWind) as Cantidad " +
+                                                          "FROM forecast.wind w");
+                    while(rs.next()){
+                        ultimo = ""+rs.getString("Cantidad");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case "day":
+                try {
+                    stObtener = conexion.createStatement();
+                    ResultSet rs = stObtener.executeQuery("SELECT COUNT(d.idDay) as Cantidad " +
+                                                          "FROM forecast.day d");
+                    while(rs.next()){
+                        ultimo = ""+rs.getString("Cantidad");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+        }
+        
+        return ultimo;
+    }
+    
 }
 
