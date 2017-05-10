@@ -74,7 +74,9 @@ public class Forecast {
             d = (Day) p.getInfo();
             String a = d.getName();
             String b = dateDay;
-            if( b.equals(a) ) return d;
+            if( b.equals(a) ) {
+                return d;
+            }
         }
         return null;
     }
@@ -154,5 +156,16 @@ public class Forecast {
         }
         res.append( " ]" );
         return res.toString();
+    }
+    
+    public float currentTempProm(){
+        float res = 0;
+        Day d;
+        for( Node p = frente; p != null;  p = p.getNext() ){
+            d = (Day)p.getInfo();
+            res += d.getTemp().getCurrentTemperature();
+        }
+        res = res / size();
+        return res;
     }
 }
