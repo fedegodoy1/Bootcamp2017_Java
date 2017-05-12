@@ -1,5 +1,9 @@
+package Main;
 
 
+
+import H2.H2DataBase;
+import MySql.MySqlConnect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,15 +28,15 @@ public class Main {
         float visibility = 15;
         Atmosphere a1 = new Atmosphere(humidity,presure,visibility);
         
-        String direction = "SE";
+        String direction = "S";
         float speed = 25;
         Wind w1 = new Wind(direction, speed);
         
-        float cTemp = 15;
-        float hTemp = 16;
+        float cTemp = 11;
+        float hTemp = 13;
         float lTemp = 10;
         Temperature t1 = new Temperature(cTemp,hTemp,lTemp);
-        Day day1 = new Day("Miercoles","10/05","Sunny",l1,a1,w1,t1);
+        Day day1 = new Day("Domingo","14/05","Sunny",l1,a1,w1,t1);
         
         //--------------------------
         
@@ -51,10 +55,10 @@ public class Main {
         float hTemp2 = 27;
         float lTemp2 = 20;
         Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
-        Day day2= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
+        Day day2= new Day("Lunes","15/05","Cloudy",l2,a2,w2,t2);
         
-        list.addFirst( day2 );
         list.addFirst( day1 );
+        list.addFirst( day2 );
         
 //        list.add(1, new Day("Miercoles","03/05","Nuboso",l2,a2,w2,t2) );
         System.out.println("\nEstado del clima: "+list.toString());
@@ -180,6 +184,11 @@ public class Main {
             rs.close();
             stObtener.close();
             connect.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            H2DataBase.insert();
         } catch (SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

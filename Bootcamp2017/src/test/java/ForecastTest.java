@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+import Main.Forecast;
+import Main.Location;
+import Main.Atmosphere;
+import Main.Temperature;
+import Main.Day;
+import Main.Wind;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,7 +48,7 @@ public class ForecastTest {
     @org.junit.Test
     public void testAdd() {
         System.out.println("add");
-        int index = 1;
+        int index = 0;
         
         Location l2=new Location("Córdoba","Argentina","Latam");
         
@@ -110,7 +116,7 @@ public class ForecastTest {
      * Test of search method, of class Forecast.
      */
     @org.junit.Test
-    public void testSearch() {
+    public void testSearch() throws NullPointerException{
         System.out.println("search");
         String dateDay = "viernes";
         Forecast instance = new Forecast();
@@ -167,7 +173,7 @@ public class ForecastTest {
         Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
         Day d= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
         
-        instance.addFirst(d);
+        instance.add(index,d);
         
         Day result = instance.remove(index);
         Day expResult = (Day) instance.get(index);
