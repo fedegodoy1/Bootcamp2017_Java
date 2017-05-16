@@ -1,15 +1,11 @@
+package main;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-import Main.Forecast;
-import Main.Location;
-import Main.Atmosphere;
-import Main.Temperature;
-import Main.Day;
-import Main.Wind;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

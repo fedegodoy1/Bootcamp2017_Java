@@ -31,6 +31,50 @@
         </dependency>
     </dependencies>
     
+    <build> 
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
+    </build>
+  
+    <profiles>
+        <profile>
+            <id>development</id>
+            <activation>
+                <property>
+                    <name>entorno</name>
+                    <value>desa</value>
+                </property>
+            </activation>
+            <properties>  
+                <DATABASE_DRIVER>com.mysql.jdbc.Driver</DATABASE_DRIVER>
+                <DATABASE_URL>jdbc:mysql://localhost:3306/forecast</DATABASE_URL>
+                <USERNAME>root</USERNAME>
+                <PASSWORD>fedex10</PASSWORD>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>test</id>
+            <activation>
+                  <property>
+                    <name>entorno</name>
+                    <value>test</value>
+                </property>
+            </activation>
+            <properties>  
+                <DATABASE_DRIVER>org.h2.Driver</DATABASE_DRIVER>
+                <DATABASE_URL>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</DATABASE_URL>
+                <USERNAME> </USERNAME>
+                <PASSWORD> </PASSWORD>
+            </properties>
+        </profile>
+        
+    </profiles>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
