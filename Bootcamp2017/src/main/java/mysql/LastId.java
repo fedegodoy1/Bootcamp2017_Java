@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class LastId {
     
-    public static String buscarUltimoId(Connection conexion,String tipo){
+    public static String buscarUltimoId(Connection conexion, String tipo){
         String ultimo = "";
         Statement stObtener;
         

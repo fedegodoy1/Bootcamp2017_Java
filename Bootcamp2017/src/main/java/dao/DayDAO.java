@@ -27,8 +27,19 @@ public class DayDAO implements WeatherDAO{
         Statement st;
         try {
             st = connect.createStatement();
-            String sql="insert into forecast.day(day.idDay, day.name, day.date, day.description,day.idAtmosphere,day.idLocation,day.idTemperature,day.idWind)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"day") +",'"+d.getName()+"','"+d.getDate()+"','"+ d.getDescription()+"',"+ LastId.buscarUltimoId(connect,"atmosphere") +","+ LastId.buscarUltimoId(connect,"location") +","+ LastId.buscarUltimoId(connect,"temperature") +","+ LastId.buscarUltimoId(connect,"wind") +")";
+            int idAt = Integer.parseInt(LastId.buscarUltimoId(connect,"atmosphere"));
+            int idLoc = Integer.parseInt(LastId.buscarUltimoId(connect,"location"));
+            int idTemp = Integer.parseInt(LastId.buscarUltimoId(connect,"temperature"));
+            int idW = Integer.parseInt(LastId.buscarUltimoId(connect,"wind"));
+            if(idAt != 0 && idLoc != 0 && idTemp!=0 && idW != 0){
+                idAt --;
+                idLoc --;
+                idTemp --;
+                idW --;
+            }
+            
+            String sql="insert into forecast.day(day.idDay, day.name, day.date, day.description,day.idAtmosphere,day.idLocation,day.idTemperature,day.idWind) \n" +
+                    "values ("+ LastId.buscarUltimoId(connect,"day") +",'"+d.getName()+"','"+d.getDate()+"','"+ d.getDescription()+"',"+ idAt +","+ idLoc +","+ idTemp +","+ idW +")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {

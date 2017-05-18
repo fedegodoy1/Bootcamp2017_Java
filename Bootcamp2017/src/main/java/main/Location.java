@@ -10,7 +10,9 @@ public class Location {
     private String city;
     private String country;
     private String region;
-
+    
+    public Location() { }
+    
     public Location(String city, String country, String region) {
         this.city = city;
         this.country = country;

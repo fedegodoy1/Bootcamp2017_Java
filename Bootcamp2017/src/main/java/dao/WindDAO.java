@@ -26,7 +26,7 @@ public class WindDAO implements WeatherDAO{
         Statement st;
         try {
             st = connect.createStatement();
-            String sql="insert into forecast.wind(wind.idWind, wind.direction, wind.speed))\n" +
+            String sql="insert into forecast.wind(wind.idWind, wind.direction, wind.speed)\n" +
                     "values ("+ LastId.buscarUltimoId(connect,"wind") +",'"+ w.getDirection() +"',"+ w.getSpeed() +")";
 
             st.executeUpdate(sql);

@@ -6,6 +6,11 @@ package main;
  * and open the template in the editor.
  */
 
+import builder.AtmosphereBuilder;
+import builder.DayBuilder;
+import builder.LocationBuilder;
+import builder.TemperatureBuilder;
+import builder.WindBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,31 +51,20 @@ public class ForecastTest {
         System.out.println("add");
         int index = 0;
         
-        Location l2=new Location("Córdoba","Argentina","Latam");
-        
-        float humidity2 = 55;
-        float presure2 = 3;
-        float visibility2 = 13;
-        Atmosphere a2 = new Atmosphere(humidity2,presure2,visibility2);
-        
-        String direction2 = "N";
-        float speed2 = 26;
-        Wind w2 = new Wind(direction2, speed2);
-        
-        float cTemp2 = 25;
-        float hTemp2 = 27;
-        float lTemp2 = 20;
-        Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
-        Day d= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
+        Location l2 = new LocationBuilder().withCity("Córdoba").withCity("Argentina").withRegion("Latam").build();
+        Atmosphere a2 = new AtmosphereBuilder().withHumidity(55).withPressure(3).withVisibility(13).build();
+        Wind w2 = new WindBuilder().withDirection("N").withSpeed(26).build();
+        Temperature t2 = new TemperatureBuilder().withCTemp(25).withHTemp(27).withLTemp(20).build();
+        Day d2 = new DayBuilder().withName("Lunes").withDate("15/05").withDescription("Cloudy").witLocation(l2).withAtmosphere(a2).withTemperature(t2).withWind(w2).build();
         
         Forecast instance = new Forecast();
-        Day expResult = d;
-        instance.add(index, d);
+        Day expResult = d2;
+        instance.add(index, d2);
         Day result = (Day)instance.get(index);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
         if(!result.equals(expResult)){
-            fail("The test case is a prototype.");
+            fail();
         }
     }
 
@@ -80,31 +74,20 @@ public class ForecastTest {
     @org.junit.Test
     public void testAddFirst() {
         System.out.println("addFirst");
-        Location l2=new Location("Córdoba","Argentina","Latam");
-        
-        float humidity2 = 55;
-        float presure2 = 3;
-        float visibility2 = 13;
-        Atmosphere a2 = new Atmosphere(humidity2,presure2,visibility2);
-        
-        String direction2 = "N";
-        float speed2 = 26;
-        Wind w2 = new Wind(direction2, speed2);
-        
-        float cTemp2 = 25;
-        float hTemp2 = 27;
-        float lTemp2 = 20;
-        Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
-        Day d= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
+        Location l = new LocationBuilder().withCity("Córdoba").withCity("Argentina").withRegion("Latam").build();
+        Atmosphere a = new AtmosphereBuilder().withHumidity(32).withPressure(8).withVisibility(25).build();
+        Wind w= new WindBuilder().withDirection("S").withSpeed(26).build();
+        Temperature t = new TemperatureBuilder().withCTemp(25).withHTemp(27).withLTemp(20).build();
+        Day d = new DayBuilder().withName("Lunes").withDate("15/05").withDescription("Cloudy").witLocation(l).withAtmosphere(a).withTemperature(t).withWind(w).build();
         
         Forecast instance = new Forecast();
         Day expResult = d;
         instance.addFirst(d);
         Day result = (Day)instance.get(0);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
         if(!result.equals(expResult)){
-            fail("The test case is a prototype.");
+            fail();
         }
     }
 
@@ -152,22 +135,11 @@ public class ForecastTest {
         
         Forecast instance = new Forecast();
         
-        Location l2=new Location("Córdoba","Argentina","Latam");
-        
-        float humidity2 = 55;
-        float presure2 = 3;
-        float visibility2 = 13;
-        Atmosphere a2 = new Atmosphere(humidity2,presure2,visibility2);
-        
-        String direction2 = "N";
-        float speed2 = 26;
-        Wind w2 = new Wind(direction2, speed2);
-        
-        float cTemp2 = 25;
-        float hTemp2 = 27;
-        float lTemp2 = 20;
-        Temperature t2 = new Temperature(cTemp2,hTemp2,lTemp2);
-        Day d= new Day("Jueves","11/05","Cloudy",l2,a2,w2,t2);
+        Location l = new LocationBuilder().withCity("Córdoba").withCountry("Argentina").withRegion("Latam").build();
+        Atmosphere a = new AtmosphereBuilder().withHumidity(23).withPressure(7).withVisibility(15).build();
+        Wind w = new WindBuilder().withDirection("S").withSpeed(15).build();
+        Temperature t = new TemperatureBuilder().withCTemp(11).withHTemp(13).withLTemp(5).build();
+        Day d = new DayBuilder().withName("Domingo").withDate("14/05").withDescription("Sunny").witLocation(l).withTemperature(t).withAtmosphere(a).withWind(w).build();
         
         instance.add(index,d);
         
@@ -175,9 +147,8 @@ public class ForecastTest {
         Day expResult = (Day) instance.get(index);
         
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         if(result.equals(expResult)){
-            fail("The test case is a prototype.");
+            fail();
         }
     }
 
@@ -188,38 +159,18 @@ public class ForecastTest {
     public void testSet() {
         System.out.println("set");
         int index = 0;
-        Location l1=new Location("Córdoba","Argentina","Latam");
         
-        float humidity3 = 10;
-        float presure3 = 3;
-        float visibility3 = 25;
-        Atmosphere a3 = new Atmosphere(humidity3,presure3,visibility3);
+        Location l1 = new LocationBuilder().withCity("Córdoba").withCountry("Argentina").withRegion("Latam").build();
+        Atmosphere a1 = new AtmosphereBuilder().withHumidity(23).withPressure(7).withVisibility(15).build();
+        Wind w1 = new WindBuilder().withDirection("S").withSpeed(15).build();
+        Temperature t1 = new TemperatureBuilder().withCTemp(11).withHTemp(13).withLTemp(5).build();
+        Day day1 = new DayBuilder().withName("Domingo").withDate("14/05").withDescription("Sunny").witLocation(l1).withTemperature(t1).withAtmosphere(a1).withWind(w1).build();
         
-        String direction3 = "N";
-        float speed3 = 5;
-        Wind w3 = new Wind(direction3, speed3);
-        
-        float cTemp3 = 15;
-        float hTemp3 = 20;
-        float lTemp3 = 10;
-        Temperature t3 = new Temperature(cTemp3,hTemp3,lTemp3);
-        Day day1 = new Day("Martes","02/05","Sunny",l1,a3,w3,t3);
-        
-        
-        float humidity = 25;
-        float presure = 4;
-        float visibility = 10;
-        Atmosphere a1 = new Atmosphere(humidity,presure,visibility);
-        
-        String direction = "E";
-        float speed = 26;
-        Wind w1 = new Wind(direction, speed);
-        
-        float cTemp = 10;
-        float hTemp = 13;
-        float lTemp = 9;
-        Temperature t1 = new Temperature(cTemp,hTemp,lTemp);
-        Day sustituido = new Day("Miercoles","10/05","Sunny",l1,a1,w1,t1);
+        Location l2 = new LocationBuilder().withCity("Córdoba").withCity("Argentina").withRegion("Latam").build();
+        Atmosphere a2 = new AtmosphereBuilder().withHumidity(55).withPressure(3).withVisibility(13).build();
+        Wind w2 = new WindBuilder().withDirection("N").withSpeed(26).build();
+        Temperature t2 = new TemperatureBuilder().withCTemp(25).withHTemp(27).withLTemp(20).build();
+        Day sustituido = new DayBuilder().withName("Lunes").withDate("15/05").withDescription("Cloudy").witLocation(l2).withAtmosphere(a2).withTemperature(t2).withWind(w2).build();
         
         Forecast instance = new Forecast();
         
@@ -228,9 +179,8 @@ public class ForecastTest {
         Day expResult = day1;
         Day result = instance.set(index, sustituido);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         if(!result.equals(expResult)){
-            fail("The test case is a prototype.");
+            fail();
         }
     }
 }

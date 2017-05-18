@@ -6,22 +6,24 @@ package main;
  * @author federico
  */
 public class Atmosphere {
-    private float humididy;
+    private float humidity;
     private float pressure;
     private float visibility;
 
-    public Atmosphere(float humididy, float pressure, float visibility) {
-        this.humididy = humididy;
+    public Atmosphere(){ }
+    
+    public Atmosphere(float humidity, float pressure, float visibility) {
+        this.humidity = humidity;
         this.pressure = pressure;
         this.visibility = visibility;
     }
 
-    public float getHumididy() {
-        return humididy;
+    public float getHumidity() {
+        return humidity;
     }
 
-    public void setHumididy(float humididy) {
-        this.humididy = humididy;
+    public void setHumidity(float humidity) {
+        this.humidity = humidity;
     }
 
     public float getPressure() {
@@ -43,6 +45,6 @@ public class Atmosphere {
     @Override
     public String toString() {
         return "\nAtmosphere \n" + 
-                "Humididy: " + humididy + "%, pressure: " + pressure + ", visibility: " + visibility + "km";
+                "Humididy: " + humidity + "%, pressure: " + pressure + ", visibility: " + visibility + "km";
     }
 }

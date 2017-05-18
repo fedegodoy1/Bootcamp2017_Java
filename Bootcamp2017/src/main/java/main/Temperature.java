@@ -11,6 +11,8 @@ public class Temperature {
     private float highTemperature;
     private float lowTemperature;
 
+    public Temperature() { }
+    
     public Temperature(float currentTemperature, float highTemperature, float lowTemperature) {
         this.currentTemperature = currentTemperature;
         this.highTemperature = highTemperature;

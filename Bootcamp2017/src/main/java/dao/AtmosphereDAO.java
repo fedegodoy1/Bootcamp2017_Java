@@ -27,7 +27,7 @@ public class AtmosphereDAO implements WeatherDAO{
         try {
             st = connect.createStatement();
             String sql="insert into forecast.atmosphere(atmosphere.idAtmosphere,atmosphere.humidity,atmosphere.pressure,atmosphere.visibility)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"atmosphere") +","+ a.getHumididy() +","+ a.getPressure() +","+ a.getVisibility()+")";
+                    "values ("+ LastId.buscarUltimoId(connect,"atmosphere") +","+ a.getHumidity() +","+ a.getPressure() +","+ a.getVisibility()+")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {
@@ -43,7 +43,7 @@ public class AtmosphereDAO implements WeatherDAO{
         try {
             st = connect.createStatement();
             String sql="update forecast.atmosphere"
-                    + " set atmosphere.humidity="+a.getHumididy()+", atmosphere.pressure="+a.getPressure()+", atmosphere.visibility="+a.getVisibility()
+                    + " set atmosphere.humidity="+a.getHumidity()+", atmosphere.pressure="+a.getPressure()+", atmosphere.visibility="+a.getVisibility()
                     + " where atmosphere.idAtmosphere="+id;
             st.executeUpdate(sql);
         } catch (SQLException ex) {
