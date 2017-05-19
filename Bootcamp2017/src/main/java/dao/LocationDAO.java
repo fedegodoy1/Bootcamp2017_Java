@@ -14,20 +14,25 @@ import java.util.logging.Logger;
 import main.Location;
 import mysql.LastId;
 import mysql.MySqlConnect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author federico
  */
+@Repository
 public class LocationDAO implements WeatherDAO{
+    
+    @Autowired
+    private MySqlConnect connect;
     public void insert(Object o){
         Location l = (Location) o;
-        Connection connect = MySqlConnect.getConnection();
         Statement st;
         try {
-            st = connect.createStatement();
+            st = connect.getConnection().createStatement();
             String sql="insert into forecast.location(location.idLocation, location.city, location.country,location.region)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"location") +",'"+ l.getCity() +"','"+ l.getCountry() +"','"+ l.getRegion()+"')";
+                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"location") +",'"+ l.getCity() +"','"+ l.getCountry() +"','"+ l.getRegion()+"')";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {

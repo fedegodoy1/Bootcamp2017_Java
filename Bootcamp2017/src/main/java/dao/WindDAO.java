@@ -14,20 +14,24 @@ import java.util.logging.Logger;
 import main.Wind;
 import mysql.LastId;
 import mysql.MySqlConnect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author federico
  */
+@Repository
 public class WindDAO implements WeatherDAO{
+    @Autowired
+    private MySqlConnect connect;
     public void insert(Object o){
         Wind w = (Wind) o;
-        Connection connect = MySqlConnect.getConnection();
         Statement st;
         try {
-            st = connect.createStatement();
+            st = connect.getConnection().createStatement();
             String sql="insert into forecast.wind(wind.idWind, wind.direction, wind.speed)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"wind") +",'"+ w.getDirection() +"',"+ w.getSpeed() +")";
+                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"wind") +",'"+ w.getDirection() +"',"+ w.getSpeed() +")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {

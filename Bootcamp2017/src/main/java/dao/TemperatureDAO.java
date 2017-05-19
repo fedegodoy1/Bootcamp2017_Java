@@ -14,20 +14,24 @@ import java.util.logging.Logger;
 import main.Temperature;
 import mysql.LastId;
 import mysql.MySqlConnect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author federico
  */
+@Repository
 public class TemperatureDAO implements WeatherDAO{
+    @Autowired
+    private MySqlConnect connect;
     public void insert(Object o){
         Temperature t = (Temperature) o;
-        Connection connect = MySqlConnect.getConnection();
         Statement st;
         try {
-            st = connect.createStatement();
+            st = connect.getConnection().createStatement();
             String sql="insert into forecast.temperature(temperature.idTemperature, temperature.currentTemperature, temperature.highTemperature, temperature.lowTemperature)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"temperature") +","+ t.getCurrentTemperature() +","+ t.getHighTemperature()+","+ t.getLowTemperature() +")";
+                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"temperature") +","+ t.getCurrentTemperature() +","+ t.getHighTemperature()+","+ t.getLowTemperature() +")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {

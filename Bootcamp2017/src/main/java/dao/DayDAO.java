@@ -14,23 +14,28 @@ import main.Temperature;
 import main.Wind;
 import mysql.MySqlConnect;
 import mysql.LastId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author federico
  */
+@Repository
 public class DayDAO implements WeatherDAO{
+    
+    @Autowired
+    private MySqlConnect connect;
     
     public void insert(Object o){
         Day d = (Day) o;
-        Connection connect = MySqlConnect.getConnection();
         Statement st;
         try {
-            st = connect.createStatement();
-            int idAt = Integer.parseInt(LastId.buscarUltimoId(connect,"atmosphere"));
-            int idLoc = Integer.parseInt(LastId.buscarUltimoId(connect,"location"));
-            int idTemp = Integer.parseInt(LastId.buscarUltimoId(connect,"temperature"));
-            int idW = Integer.parseInt(LastId.buscarUltimoId(connect,"wind"));
+            st = connect.getConnection().createStatement();
+            int idAt = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(),"atmosphere"));
+            int idLoc = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(),"location"));
+            int idTemp = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(),"temperature"));
+            int idW = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(),"wind"));
             if(idAt != 0 && idLoc != 0 && idTemp!=0 && idW != 0){
                 idAt --;
                 idLoc --;
@@ -39,7 +44,7 @@ public class DayDAO implements WeatherDAO{
             }
             
             String sql="insert into forecast.day(day.idDay, day.name, day.date, day.description,day.idAtmosphere,day.idLocation,day.idTemperature,day.idWind) \n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"day") +",'"+d.getName()+"','"+d.getDate()+"','"+ d.getDescription()+"',"+ idAt +","+ idLoc +","+ idTemp +","+ idW +")";
+                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"day") +",'"+d.getName()+"','"+d.getDate()+"','"+ d.getDescription()+"',"+ idAt +","+ idLoc +","+ idTemp +","+ idW +")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {

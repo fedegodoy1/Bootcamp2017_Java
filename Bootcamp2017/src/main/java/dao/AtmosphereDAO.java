@@ -14,20 +14,24 @@ import java.util.logging.Logger;
 import main.Atmosphere;
 import mysql.LastId;
 import mysql.MySqlConnect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author federico
  */
 public class AtmosphereDAO implements WeatherDAO{
+    
+    private MySqlConnect connect;
+    
     public void insert(Object o){
         Atmosphere a =(Atmosphere) o;
-        Connection connect = MySqlConnect.getConnection();
         Statement st;
         try {
-            st = connect.createStatement();
+            st = connect.getConnection().createStatement();
             String sql="insert into forecast.atmosphere(atmosphere.idAtmosphere,atmosphere.humidity,atmosphere.pressure,atmosphere.visibility)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect,"atmosphere") +","+ a.getHumidity() +","+ a.getPressure() +","+ a.getVisibility()+")";
+                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"atmosphere") +","+ a.getHumidity() +","+ a.getPressure() +","+ a.getVisibility()+")";
 
             st.executeUpdate(sql);
         } catch (SQLException ex) {
