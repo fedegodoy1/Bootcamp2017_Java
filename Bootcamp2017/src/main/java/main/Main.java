@@ -12,21 +12,40 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mysql.LastId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author federico
  */
+@Component
 public class Main {
 
     public static void main(String args[]) {
         String confFile = "file:src/main/webapp/WEB-INF/applicationContext.xml";
         ConfigurableApplicationContext context = new ClassPathXmlApplicationContext(confFile);
-        MySqlConnect dbConfig = (MySqlConnect) context.getBean("db");
-        System.out.println(dbConfig.toString());
+        Main p = context.getBean(Main.class);
+//        MySqlConnect dbConfig = (MySqlConnect) context.getBean("db");
+//        System.out.println(dbConfig.toString());
+        p.start(args);
         
+    }
+    
+    @Autowired
+    private AtmosphereDAO atdao;
+    @Autowired
+    private DayDAO daydao;
+    @Autowired
+    private LocationDAO locdao;
+    @Autowired
+    private TemperatureDAO tempdao;
+    @Autowired
+    private WindDAO windao;
+    
+    private void start(String[] args){
         Forecast list = new Forecast();
         
         Location l1 = new LocationBuilder().withCity("Córdoba").withCountry("Argentina").withRegion("Latam").build();
@@ -50,19 +69,14 @@ public class Main {
         for (int i = 0; i < list.size(); i++) {
             Day insert = (Day) list.get(i);
 
-            WeatherDAO atdao = new AtmosphereDAO();
             atdao.insert(insert.getAtmosphere());
 
-            WeatherDAO locdao = new LocationDAO();
             locdao.insert(insert.getLocation());
 
-            WeatherDAO temdao = new TemperatureDAO();
-            temdao.insert(insert.getTemp());
+            tempdao.insert(insert.getTemp());
 
-            WeatherDAO wdao = new WindDAO();
-            wdao.insert(insert.getWind());
+            windao.insert(insert.getWind());
 
-            WeatherDAO daydao = new DayDAO();
             daydao.insert(insert);
 
         }

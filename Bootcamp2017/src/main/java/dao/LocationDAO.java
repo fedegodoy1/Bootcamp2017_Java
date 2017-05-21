@@ -24,7 +24,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LocationDAO implements WeatherDAO{
     
-    @Autowired
     private MySqlConnect connect;
     public void insert(Object o){
         Location l = (Location) o;

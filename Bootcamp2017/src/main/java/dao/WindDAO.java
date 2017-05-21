@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class WindDAO implements WeatherDAO{
-    @Autowired
+    
     private MySqlConnect connect;
     public void insert(Object o){
         Wind w = (Wind) o;

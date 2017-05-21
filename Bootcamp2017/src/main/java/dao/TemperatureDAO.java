@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class TemperatureDAO implements WeatherDAO{
-    @Autowired
+    
     private MySqlConnect connect;
     public void insert(Object o){
         Temperature t = (Temperature) o;
