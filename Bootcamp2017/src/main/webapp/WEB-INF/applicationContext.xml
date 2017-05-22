@@ -9,15 +9,7 @@
     
     
     <context:annotation-config/> 
-    <context:component-scan base-package="dao,main"/>
+    <context:component-scan base-package="mysql,dao,main"/>
     <context:property-placeholder location="file:C:\Users\federico\OneDrive\Documents\Bootcamp Globant\Bootcamp2017_Java\Bootcamp2017\target\classes\dbConfig.properties"/> 
 
-    <bean id="db" class="mysql.MySqlConnect">
-        <property name="DATABASE_DRIVER" value="${DATABASE_DRIVER}"/>
-        <property name="DATABASE_URL" value="${DATABASE_URL}"/>
-        <property name="USERNAME" value="${USERNAME}"/>
-        <property name="PASSWORD" value="${PASSWORD}"/>
-    </bean>
-    
-    
 </beans>

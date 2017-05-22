@@ -11,40 +11,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 /**
  *
  * @author federico
  */
+@Configuration
+@PropertySource("file:C:/Users/federico/OneDrive/Documents/Bootcamp Globant/Bootcamp2017_Java/Bootcamp2017/target/classes/dbConfig.properties")
 public class Config {
+    @Autowired
+    Environment env;
     
-    public Properties load(){
-        
-    Properties prop = new Properties();
-    InputStream input = null;
-
-	try {
-            input = new FileInputStream("C:/Users/federico/OneDrive/Documents/Bootcamp Globant/Bootcamp2017_Java/Bootcamp2017/target/classes/my_dbConfig.properties.txt");
-
-            // load a properties file
-            prop.load(input);
-            
-            // get the property value and print it out
-            System.out.println(prop.getProperty("DATABASE_DRIVER"));
-            System.out.println(prop.getProperty("USERNAME"));
-            System.out.println(prop.getProperty("PASSWORD"));
-
-	} catch (IOException ex) {
-		ex.printStackTrace();
-	} finally {
-		if (input != null) {
-			try {
-				input.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-        return prop;
+    @Bean(name="dbConfig")
+    public MySqlConnect getDbConfig(){
+        MySqlConnect dbConf = new MySqlConnect();
+        dbConf.setDATABASE_DRIVER(env.getProperty("DATABASE_DRIVER"));
+        dbConf.setDATABASE_URL(env.getProperty("DATABASE_URL"));
+        dbConf.setPASSWORD(env.getProperty("PASSWORD"));
+        dbConf.setUSERNAME(env.getProperty("USERNAME"));
+        return dbConf;
     }
 }
