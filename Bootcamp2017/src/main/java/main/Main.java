@@ -27,11 +27,10 @@ public class Main {
     public static void main(String args[]) {
         String confFile = "file:src/main/webapp/WEB-INF/applicationContext.xml";
         ConfigurableApplicationContext context = new ClassPathXmlApplicationContext(confFile);
+        MySqlConnect dbConfig = (MySqlConnect) context.getBean("dbConfig");
+        System.out.println(dbConfig.toString());
         Main p = context.getBean(Main.class);
-//        MySqlConnect dbConfig = (MySqlConnect) context.getBean("db");
-//        System.out.println(dbConfig.toString());
         p.start(args);
-        
     }
     
     @Autowired

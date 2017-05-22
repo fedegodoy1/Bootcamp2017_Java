@@ -5,10 +5,10 @@ package dao;
  *
  * @author federico
  */
-public interface WeatherDAO{
+public interface WeatherDAO <t>{
     
-    public void insert(Object o);
-    public Object update(int id, Object o);
+    public void insert(t o);
+    public Object update(int id, t o);
     public Object select(int id);
     public Object delete(int id);
     

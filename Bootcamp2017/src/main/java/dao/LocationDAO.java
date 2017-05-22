@@ -22,82 +22,56 @@ import org.springframework.stereotype.Repository;
  * @author federico
  */
 @Repository
-public class LocationDAO implements WeatherDAO{
-    
-    private MySqlConnect connect;
-    public void insert(Object o){
-        Location l = (Location) o;
-        Statement st;
-        try {
-            st = connect.getConnection().createStatement();
-            String sql="insert into forecast.location(location.idLocation, location.city, location.country,location.region)\n" +
-                    "values ("+ LastId.buscarUltimoId(connect.getConnection(),"location") +",'"+ l.getCity() +"','"+ l.getCountry() +"','"+ l.getRegion()+"')";
+public class LocationDAO extends BaseWeatherDAO implements WeatherDAO<Location> {
 
-            st.executeUpdate(sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private MySqlConnect connect;
+
+    public void insert(Location o) {
+        Location l = o;
+        String sql = "insert into forecast.location(location.idLocation, location.city, location.country,location.region)\n"
+                    + "values (" + LastId.buscarUltimoId(connect.getConnection(), "location") + ",'" + l.getCity() + "','" + l.getCountry() + "','" + l.getRegion() + "')";
+        executeUp(sql, connect.getConnection());
     }
-    
-    public Object update(int id,Object o){
-        Location l = (Location) o;
-        Connection connect = MySqlConnect.getConnection();
-        Statement st;
-        try {
-            st = connect.createStatement();
-            String sql="update forecast.location"
-                    + " set location.city='"+l.getCity()+"', location.country='"+l.getCountry()+"', location.region='"+l.getRegion()+"' "
-                    + " where location.idLocation="+id;
-            st.executeUpdate(sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    public Object update(int id, Location o) {
+        Location l = o;
+        String sql = "update forecast.location"
+                    + " set location.city='" + l.getCity() + "', location.country='" + l.getCountry() + "', location.region='" + l.getRegion() + "' "
+                    + " where location.idLocation=" + id;
+        executeUp(sql, connect.getConnection());
         return l;
     }
-    public Object select(int id){
-        
+
+    public Object select(int id) {
         Location l = null;
-        Connection connect = MySqlConnect.getConnection();
-        Statement st;
-        ResultSet rs;
+        String city = "";
+        String country = "";
+        String region = "";
+        String sqlLoc = "SELECT l.* "
+                + "FROM forecast.location l"
+                + "WHERE l.idLocation =" + id;
+        ResultSet rs = executeQ(sqlLoc, connect.getConnection());;
         try {
-            st = connect.createStatement();
-            String sqlLoc="SELECT l.* "
-                    + "FROM forecast.location l"
-                    + "WHERE l.idLocation ="+id;
-            rs = st.executeQuery(sqlLoc);
-            String city = "";
-            String country = "";
-            String region = "";
-            while(rs.next()){
+            while (rs.next()) {
                 city = rs.getString("city");
                 country = rs.getString("country");
                 region = rs.getString("region");
             }
-            l = new Location(city,country,region);
-            }   
-        catch (SQLException ex) {
-            Logger.getLogger(AtmosphereDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        return l;
-    }
-    
-    public Object delete(int id){
-        Location l = null;
-        Connection connect = MySqlConnect.getConnection();
-        Statement st;
-        
-        try{
-            String sql = "DELETE l\n" +
-                        "FROM forecast.location l\n" +
-                        "WHERE l.idLocation = "+id;
-            l = (Location) select(id);
-            st = connect.createStatement();
-            st.executeUpdate(sql);
-        }catch (SQLException ex) {
-            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
+            l = new Location(city, country, region);
+        } catch (SQLException ex) {
+            Logger.getLogger(LocationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return l;
     }
-    
+
+    public Object delete(int id) {
+        Location l = null;
+        String sql = "DELETE l\n"
+                + "FROM forecast.location l\n"
+                + "WHERE l.idLocation = " + id;
+        executeUp(sql, connect.getConnection());
+        l = (Location) select(id);
+        return l;
+    }
+
 }

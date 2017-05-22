@@ -31,6 +31,10 @@ public class MySqlConnect {
     //private Properties properties;
     //InputStream input;
 
+    public MySqlConnect(){
+        
+    }
+    
     public void setDATABASE_DRIVER(String DATABASE_DRIVER) {
         this.DATABASE_DRIVER = DATABASE_DRIVER;
     }
