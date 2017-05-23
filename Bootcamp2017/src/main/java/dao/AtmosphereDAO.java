@@ -35,7 +35,7 @@ public class AtmosphereDAO extends BaseWeatherDAO implements WeatherDAO<Atmosphe
         executeUp(sql, connect.getConnection());
     }
 
-    public Object update(int id, Atmosphere o) {
+    public Atmosphere update(int id, Atmosphere o) {
         Atmosphere a = o;
         String sql = "update forecast.atmosphere"
                 + " set atmosphere.humidity=" + a.getHumidity() + ", atmosphere.pressure=" + a.getPressure() + ", atmosphere.visibility=" + a.getVisibility()
@@ -44,7 +44,7 @@ public class AtmosphereDAO extends BaseWeatherDAO implements WeatherDAO<Atmosphe
         return a;
     }
 
-    public Object select(int id) {
+    public Atmosphere select(int id) {
         float hum = 0;
         float pres = 0;
         float vis = 0;
@@ -66,7 +66,7 @@ public class AtmosphereDAO extends BaseWeatherDAO implements WeatherDAO<Atmosphe
         return a;
     }
 
-    public Object delete(int id) {
+    public Atmosphere delete(int id) {
         Atmosphere a = null;
         String sql = "DELETE a\n"
                 + " FROM forecast.atmosphere a\n"

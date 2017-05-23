@@ -33,7 +33,7 @@ public class TemperatureDAO extends BaseWeatherDAO implements WeatherDAO<Tempera
         executeUp(sql, connect.getConnection());
     }
 
-    public Object update(int id, Temperature o) {
+    public Temperature update(int id, Temperature o) {
         Temperature t = o;
         String sql = "update forecast.temperature"
                 + " set temperature.currentTemperature=" + t.getCurrentTemperature() + ", temperature.highTemperature=" + t.getHighTemperature() + ", temperature.lowTemperature=" + t.getLowTemperature()
@@ -42,7 +42,7 @@ public class TemperatureDAO extends BaseWeatherDAO implements WeatherDAO<Tempera
         return t;
     }
 
-    public Object select(int id) {
+    public Temperature select(int id) {
         Temperature t = null;
         float cTemp = 0;
         float hTemp = 0;
@@ -64,7 +64,7 @@ public class TemperatureDAO extends BaseWeatherDAO implements WeatherDAO<Tempera
         return t;
     }
 
-    public Object delete(int id) {
+    public Temperature delete(int id) {
         Temperature t = null;
         String sql = "DELETE t\n"
                 + " FROM forecast.temperature t\n"

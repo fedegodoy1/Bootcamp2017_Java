@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
  * @author federico
  */
 @Repository
-public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day> {
+public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffDAO {
 
     private MySqlConnect connect;
 
@@ -42,7 +42,7 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day> {
         executeUp(sql, connect.getConnection());
     }
 
-    public Object update(int id, Day o) {
+    public Day update(int id, Day o) {
         Day d = o;
         String sql = "update forecast.day"
                 + "set day.name='" + d.getName() + "', day.date='" + d.getDate() + "', day.description='" + d.getDescription() + "'"
@@ -51,7 +51,7 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day> {
         return d;
     }
 
-    public Object select(int id) {
+    public Day select(int id) {
         Day d = null;
         String sqlAt = "SELECT a.* "
                     + "FROM forecast.atmosphere a, forecast.day d "
@@ -120,21 +120,33 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day> {
                 date = rs.getString("date");
                 descr = rs.getString("description");
             }
-            d = new Day(date, descr, name, l, a, w, t);
+            d = new Day(name,date, descr, l, a, w, t);
         } catch (SQLException ex) {
             Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return d;
     }
 
-    public Object delete(int id) {
+    public Day delete(int id) {
         Day d = null;
         String sql = "DELETE d,a,l,t,w\n"
                 + "FROM forecast.day d INNER JOIN forecast.atmosphere a INNER JOIN forecast.location l INNER JOIN forecast.temperature t INNER JOIN forecast.wind w\n"
                 + "WHERE d.idDay = " + id + " and d.idAtmosphere = a.idAtmosphere and d.idLocation = l.idLocation and d.idWind = w.idWind and d.idTemperature = t.idTemperature";
-        d = (Day) select(id);
+        d = select(id);
         executeUp(sql, connect.getConnection());
         return d;
     }
-
+    public int count(){
+        int r = 0;
+        String sql = "SELECT COUNT(d.idDay) as Cantidad FROM forecast.day d";
+        ResultSet rs = executeQ(sql, connect.getConnection());
+        try {
+            while(rs.next()){
+                r = rs.getInt("Cantidad");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
 }

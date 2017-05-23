@@ -33,7 +33,7 @@ public class WindDAO extends BaseWeatherDAO implements WeatherDAO<Wind> {
         executeUp(sql, connect.getConnection());
     }
 
-    public Object update(int id, Wind o) {
+    public Wind update(int id, Wind o) {
         Wind w = o;
         String sql = "update forecast.wind"
                     + " set wind.direction='" + w.getDirection() + "', wind.speed=" + w.getSpeed()
@@ -42,7 +42,7 @@ public class WindDAO extends BaseWeatherDAO implements WeatherDAO<Wind> {
         return w;
     }
 
-    public Object select(int id) {
+    public Wind select(int id) {
         Wind w = null;
         String sqlWind = "SELECT w.* "
                     + "FROM forecast.wind w "
@@ -62,7 +62,7 @@ public class WindDAO extends BaseWeatherDAO implements WeatherDAO<Wind> {
         return w;
     }
 
-    public Object delete(int id) {
+    public Wind delete(int id) {
         Wind w = null;
         String sql = "DELETE w\n"
                     + " FROM forecast.wind a\n"

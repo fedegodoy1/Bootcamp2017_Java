@@ -33,7 +33,7 @@ public class LocationDAO extends BaseWeatherDAO implements WeatherDAO<Location> 
         executeUp(sql, connect.getConnection());
     }
 
-    public Object update(int id, Location o) {
+    public Location update(int id, Location o) {
         Location l = o;
         String sql = "update forecast.location"
                     + " set location.city='" + l.getCity() + "', location.country='" + l.getCountry() + "', location.region='" + l.getRegion() + "' "
@@ -42,7 +42,7 @@ public class LocationDAO extends BaseWeatherDAO implements WeatherDAO<Location> 
         return l;
     }
 
-    public Object select(int id) {
+    public Location select(int id) {
         Location l = null;
         String city = "";
         String country = "";
@@ -64,7 +64,7 @@ public class LocationDAO extends BaseWeatherDAO implements WeatherDAO<Location> 
         return l;
     }
 
-    public Object delete(int id) {
+    public Location delete(int id) {
         Location l = null;
         String sql = "DELETE l\n"
                 + "FROM forecast.location l\n"

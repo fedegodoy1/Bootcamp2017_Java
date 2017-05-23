@@ -33,7 +33,7 @@ public class Config {
         dbConf.setDATABASE_DRIVER(env.getProperty("DATABASE_DRIVER"));
         dbConf.setDATABASE_URL(env.getProperty("DATABASE_URL"));
         dbConf.setPASSWORD(env.getProperty("PASSWORD"));
-        dbConf.setUSERNAME(env.getProperty("USERNAME"));
+        dbConf.setUSERNAME("root");
         return dbConf;
     }
 }

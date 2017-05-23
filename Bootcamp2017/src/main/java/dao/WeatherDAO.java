@@ -8,8 +8,8 @@ package dao;
 public interface WeatherDAO <t>{
     
     public void insert(t o);
-    public Object update(int id, t o);
-    public Object select(int id);
-    public Object delete(int id);
+    public t update(int id, t o);
+    public t select(int id);
+    public t delete(int id);
     
 }
