@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class AtmosphereDAO extends BaseWeatherDAO implements WeatherDAO<Atmosphere> {
-    @Autowired
+
     private MySqlConnect connect;
 
     public void setConnect(MySqlConnect connect) {

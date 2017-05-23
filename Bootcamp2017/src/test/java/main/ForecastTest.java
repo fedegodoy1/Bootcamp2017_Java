@@ -101,11 +101,7 @@ public class ForecastTest {
         Forecast instance = new Forecast();
         Day expResult = null;
         Day result = instance.search(dateDay);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        if(!result.equals(expResult)){
-            fail("The test case is a prototype.");
-        }
+        assertNull("El objeto es nulo",result);
     }
 
     /**
@@ -114,14 +110,20 @@ public class ForecastTest {
     @org.junit.Test
     public void testGet() {
         System.out.println("get");
-        int index = -4;
+        Location l = new LocationBuilder().withCity("Córdoba").withCity("Argentina").withRegion("Latam").build();
+        Atmosphere a = new AtmosphereBuilder().withHumidity(32).withPressure(8).withVisibility(25).build();
+        Wind w= new WindBuilder().withDirection("S").withSpeed(26).build();
+        Temperature t = new TemperatureBuilder().withCTemp(25).withHTemp(27).withLTemp(20).build();
+        Day d = new DayBuilder().withName("Lunes").withDate("15/05").withDescription("Cloudy").witLocation(l).withAtmosphere(a).withTemperature(t).withWind(w).build();
+        
+        int index = 0;
         Forecast instance = new Forecast();
+        instance.addFirst(d);
         Object expResult = null;
         Object result = instance.get(index);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        if(!result.equals(expResult)){
-            fail("The test case is a prototype.");
+        
+        if(result.equals(expResult)){
+            fail();
         }
     }
 
@@ -141,13 +143,12 @@ public class ForecastTest {
         Temperature t = new TemperatureBuilder().withCTemp(11).withHTemp(13).withLTemp(5).build();
         Day d = new DayBuilder().withName("Domingo").withDate("14/05").withDescription("Sunny").witLocation(l).withTemperature(t).withAtmosphere(a).withWind(w).build();
         
-        instance.add(index,d);
-        
-        Day result = instance.remove(index);
+        instance.addFirst(d);
         Day expResult = (Day) instance.get(index);
+        Day result = instance.remove(index);
         
-        assertEquals(expResult, result);
-        if(result.equals(expResult)){
+        
+        if(!result.equals(expResult)){
             fail();
         }
     }
