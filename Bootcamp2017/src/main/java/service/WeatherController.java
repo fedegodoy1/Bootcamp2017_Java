@@ -5,36 +5,41 @@
  */
 package service;
 
+import dao.AtmosphereDAO;
+import dao.BaseWeatherDAO;
 import dao.DayDAO;
-import java.sql.Connection;
+import dao.LocationDAO;
+import dao.TemperatureDAO;
+import dao.WindDAO;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Day;
-import mysql.LastId;
-import mysql.MySqlConnect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
  * @author federico
  */
-@RestController
+@RestController("MyApp")
 public class WeatherController {
 
     @Autowired
     DayDAO dayDao;
+    @Autowired
+    AtmosphereDAO atDAO;
+    @Autowired
+    LocationDAO locDAO;
+    @Autowired
+    TemperatureDAO tempDAO;
+    @Autowired
+    WindDAO windDAO;
 
-    @RequestMapping(value = "/day/", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/days/", method = RequestMethod.GET)
     public ArrayList<Day> allDays() {
         ArrayList<Day> days = new ArrayList<Day>();
         Day d = null;
@@ -46,11 +51,36 @@ public class WeatherController {
         return days;
     }
 
-    @RequestMapping(value = "/day/{idday}", method = RequestMethod.GET, headers = "Accept=application/json")
-    public ArrayList<Day> dayName(@PathVariable("idday") String idday) {
+    @RequestMapping(value = "/day/{idday}", method = RequestMethod.GET)
+    public ArrayList<Day> day(@PathVariable("idday") String idday) {
         ArrayList<Day> name = new ArrayList<Day>();
         Day d = dayDao.select(Integer.parseInt(idday));
         name.add(d);
         return name;
+    }
+    
+    @RequestMapping(value="/insertday", method = RequestMethod.POST)
+    public ArrayList<Day> addDay(@RequestBody Day d){
+        ArrayList<Day> r = new ArrayList<Day>();
+        atDAO.insert(d.getAtmosphere());
+        tempDAO.insert(d.getTemp());
+        locDAO.insert(d.getLocation());
+        windDAO.insert(d.getWind());
+        dayDao.insert(d);
+        r.add(d);
+        return r;
+    }
+    
+    @RequestMapping(value="/updateday", method = RequestMethod.PUT)
+    public ArrayList<Day> updateDay(@RequestBody Day d){
+        ArrayList<Day> r = new ArrayList<Day>();
+        int vec[] = dayDao.idsComponentsDay(d.getDate()); //0:idLoc 1:idAt 2:idTemp 3:idWind
+        locDAO.update(vec[0], d.getLocation());
+        atDAO.update(vec[1], d.getAtmosphere());
+        tempDAO.update(vec[2], d.getTemp());
+        windDAO.update(vec[3], d.getWind());
+        dayDao.update(dayDao.selectByDateId(d.getDate()), d);
+        r.add(d);
+        return r;
     }
 }
