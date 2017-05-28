@@ -11,6 +11,5 @@
         <title>WeatherAPP</title>
     </head>
     <body>
-        ${message}
     </body>
 </html>
