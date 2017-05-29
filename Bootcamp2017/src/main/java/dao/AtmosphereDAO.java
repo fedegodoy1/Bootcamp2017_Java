@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Atmosphere;
+import domain.Atmosphere;
 import mysql.LastId;
 import mysql.MySqlConnect;
 import org.springframework.beans.factory.annotation.Autowired;

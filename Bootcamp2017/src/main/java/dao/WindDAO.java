@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Wind;
+import domain.Wind;
 import mysql.LastId;
 import mysql.MySqlConnect;
 import org.springframework.beans.factory.annotation.Autowired;

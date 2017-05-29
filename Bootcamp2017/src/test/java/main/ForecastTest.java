@@ -6,11 +6,17 @@ package main;
  * and open the template in the editor.
  */
 
-import builder.AtmosphereBuilder;
-import builder.DayBuilder;
-import builder.LocationBuilder;
-import builder.TemperatureBuilder;
-import builder.WindBuilder;
+import domain.Day;
+import domain.Location;
+import domain.Temperature;
+import domain.Forecast;
+import domain.Wind;
+import domain.Atmosphere;
+import pattern.builder.AtmosphereBuilder;
+import pattern.builder.DayBuilder;
+import pattern.builder.LocationBuilder;
+import pattern.builder.TemperatureBuilder;
+import pattern.builder.WindBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

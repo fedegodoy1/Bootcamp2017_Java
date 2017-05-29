@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package builder;
+package pattern.builder;
 
-import main.Atmosphere;
-import main.Day;
-import main.Location;
-import main.Temperature;
-import main.Wind;
+import domain.Atmosphere;
+import domain.Day;
+import domain.Location;
+import domain.Temperature;
+import domain.Wind;
 
 /**
  *

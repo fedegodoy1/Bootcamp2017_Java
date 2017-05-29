@@ -1,7 +1,7 @@
 package mysql;
 
-import main.Atmosphere;
-import main.Day;
+import domain.Atmosphere;
+import domain.Day;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

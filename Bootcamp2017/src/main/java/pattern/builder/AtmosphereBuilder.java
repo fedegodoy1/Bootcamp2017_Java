@@ -1,7 +1,7 @@
 
-package builder;
+package pattern.builder;
 
-import main.Atmosphere;
+import domain.Atmosphere;
 
 /**
  *

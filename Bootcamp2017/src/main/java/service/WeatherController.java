@@ -5,11 +5,11 @@
  */
 package service;
 
-import builder.AtmosphereBuilder;
-import builder.DayBuilder;
-import builder.LocationBuilder;
-import builder.TemperatureBuilder;
-import builder.WindBuilder;
+import pattern.builder.AtmosphereBuilder;
+import pattern.builder.DayBuilder;
+import pattern.builder.LocationBuilder;
+import pattern.builder.TemperatureBuilder;
+import pattern.builder.WindBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.AtmosphereDAO;
@@ -26,11 +26,11 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import main.Atmosphere;
-import main.Day;
-import main.Location;
-import main.Temperature;
-import main.Wind;
+import domain.Atmosphere;
+import domain.Day;
+import domain.Location;
+import domain.Temperature;
+import domain.Wind;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,10 +67,10 @@ public class WeatherController {
         String yqlId="select woeid from geo.places(1) where text=\" "+location+", "+country+"\"";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode j = mapper.readTree(clientYahooWeather.getForecastDayByLocation(yqlId,"json"));
+            JsonNode j = mapper.readTree(clientYahooWeather.getForecast(yqlId,"json"));
             int id = j.get("query").get("results").get("place").get("woeid").asInt();
             String yqlForecast="select * from weather.forecast where woeid = "+id;
-            j = mapper.readTree(clientYahooWeather.getForecastDayByLocation(yqlForecast,"json"));
+            j = mapper.readTree(clientYahooWeather.getForecast(yqlForecast,"json"));
             
             //creates an entity atmosphere humidity,pressure,visibility
             double humidity = j.get("query").get("results").get("channel").get("atmosphere").get("humidity").asDouble();
