@@ -14,7 +14,7 @@
         http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd">
     
     <mvc:annotation-driven/>
-    <context:component-scan base-package="mysql,dao,main,service"/>
+    <context:component-scan base-package="mysql,dao,service,pattern.proxy,pattern.adapter,pattern.transformer"/>
     <jax-client:client id="clientYahooWeather" address="https://query.yahooapis.com" serviceClass="service.ClientYahooWeather"/>
 
 </beans>

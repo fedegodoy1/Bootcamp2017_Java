@@ -27,14 +27,12 @@ public class ProxyWeather implements ClientYahooWeather{
     private WeatherTransformer wt;
     @Autowired
     private AdapterNameAndDateToName a;
-    @Autowired
-    private Validations v;
     @Resource(name="clientYahooWeather")
     private ClientYahooWeather clientYahooWeather;
     
     @Override
     public String getForecast(String query, String format){
-        boolean ok = true;
+        boolean ok = Validations.checkInet();
         Day d = null;
         if(ok){
             try {
@@ -56,7 +54,7 @@ public class ProxyWeather implements ClientYahooWeather{
                 Logger.getLogger(ProxyWeather.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
-            
+            return "Can't connect";
         }
         return d.toString();
     }
