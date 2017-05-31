@@ -23,9 +23,9 @@ public class LocationYahoo {
     }
 
     public LocationYahoo(JsonNode j) {
-        this.city = j.get("query").get("results").get("channel").get("location").get("city").asText();;
-        this.country = j.get("query").get("results").get("channel").get("location").get("country").asText();;
-        this.region = j.get("query").get("results").get("channel").get("location").get("region").asText();;
+        this.city = j.get("query").get("results").get("channel").get("location").get("city").asText();
+        this.country = j.get("query").get("results").get("channel").get("location").get("country").asText();
+        this.region = j.get("query").get("results").get("channel").get("location").get("region").asText();
     }
 
     public String getCity() {

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pattern.adapter;
+package service;
+
+import domain.Day;
 
 /**
  *
  * @author federico
  */
-public interface Name {
-    public String getName();
-    public String getDate();
+public interface YahooObject {
+    Day requestForecastCurrentDay(String query, String format);
 }

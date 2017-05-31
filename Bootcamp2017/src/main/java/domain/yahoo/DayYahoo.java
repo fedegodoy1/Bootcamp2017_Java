@@ -20,6 +20,10 @@ public class DayYahoo {
     private TemperatureYahoo temperature;
     private WindYahoo wind;
 
+    public DayYahoo(){
+        
+    }
+    
     public DayYahoo(String name, String date, String description, AtmosphereYahoo atmosphere, LocationYahoo location, TemperatureYahoo temperature, WindYahoo wind) {
         this.name = name;
         this.date = date;
@@ -28,19 +32,19 @@ public class DayYahoo {
         this.location = location;
         this.temperature = temperature;
         this.wind = wind;
-    }
+    } 
     
     public DayYahoo(JsonNode j, AtmosphereYahoo atmosphere, LocationYahoo location, TemperatureYahoo temperature, WindYahoo wind) {
         this.name = j.get("query").get("results").get("channel").get("item").get("pubDate").asText();
-        this.date = j.get("query").get("results").get("channel").get("item").get("condition").get("date").asText();;
+        this.date = j.get("query").get("results").get("channel").get("item").get("condition").get("date").asText();
         this.description = j.get("query").get("results").get("channel").get("item").get("condition").get("text").asText();
         this.atmosphere = atmosphere;
         this.location = location;
         this.temperature = temperature;
         this.wind = wind;
     }
-
-    public String getName() {
+    
+      public String getName() {
         return name;
     }
 

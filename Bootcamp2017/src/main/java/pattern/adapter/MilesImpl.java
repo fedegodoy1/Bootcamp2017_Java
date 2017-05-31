@@ -5,19 +5,22 @@
  */
 package pattern.adapter;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author federico
  */
-public class NameAndDateInLine implements NameAndDate{
-    private String line;
+@Component
+public class MilesImpl implements Miles{
+    private float speed;
 
-    public void setLine(String line) {
-        this.line = line;
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
     
     @Override
-    public String getLine(){
-        return line;
+    public float getSpeed(){
+        return speed;
     }
 }

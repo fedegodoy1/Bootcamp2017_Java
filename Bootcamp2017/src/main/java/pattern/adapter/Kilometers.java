@@ -9,6 +9,6 @@ package pattern.adapter;
  *
  * @author federico
  */
-public interface NameAndDate {
-    public String getLine();
+public interface Kilometers {
+    public float getSpeed();
 }
