@@ -56,7 +56,7 @@ public class WeatherTransformerTest {
      * Test of transformAtmosphereYahooToAtmosphere method, of class WeatherTransformer.
      */
     @Test
-    public void testTransformAtmosphereYahooToAtmosphere() {
+    public void testTransformJsonToAtmosphere() {
         ObjectMapper map = new ObjectMapper();
         JsonNode j = null;
         try {
@@ -64,7 +64,7 @@ public class WeatherTransformerTest {
                     } catch (IOException ex) {
             Logger.getLogger(WeatherTransformerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Atmosphere a = WeatherTransformer.transformAtmosphereYahooToAtmosphere(j);
+        Atmosphere a = WeatherTransformer.transformJsonToAtmosphere(j);
         assertEquals(85, a.getHumidity(),1);
     }
 
@@ -72,7 +72,7 @@ public class WeatherTransformerTest {
      * Test of transformLocationYahooToLocation method, of class WeatherTransformer.
      */
     @Test
-    public void testTransformLocationYahooToLocation() {
+    public void testTransformJsonToLocation() {
         ObjectMapper map = new ObjectMapper();
         JsonNode j = null;
         try {
@@ -81,7 +81,7 @@ public class WeatherTransformerTest {
         catch (IOException ex) {
             Logger.getLogger(WeatherTransformerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Location l = WeatherTransformer.transformLocationYahooToLocation(j);
+        Location l = WeatherTransformer.transformJsonToLocation(j);
         assertEquals("Nome", l.getCity());
     }
 
@@ -89,7 +89,7 @@ public class WeatherTransformerTest {
      * Test of transformWindYahooToWind method, of class WeatherTransformer.
      */
     @Test
-    public void testTransformWindYahooToWind() {
+    public void testTransformJsonToWind() {
         ObjectMapper map = new ObjectMapper();
         JsonNode j = null;
         try {
@@ -98,7 +98,7 @@ public class WeatherTransformerTest {
         catch (IOException ex) {
             Logger.getLogger(WeatherTransformerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Wind w = WeatherTransformer.transformWindYahooToWind(j);
+        Wind w = WeatherTransformer.transformJsonToWind(j);
         assertEquals(14, w.getSpeed(),1);
     }
 
@@ -106,7 +106,7 @@ public class WeatherTransformerTest {
      * Test of transformTemperatureYahooToTemperature method, of class WeatherTransformer.
      */
     @Test
-    public void testTransformTemperatureYahooToTemperature() {
+    public void testTransformJsonToTemperature() {
         ObjectMapper map = new ObjectMapper();
         JsonNode j = null;
         try {
@@ -115,7 +115,7 @@ public class WeatherTransformerTest {
         catch (IOException ex) {
             Logger.getLogger(WeatherTransformerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Temperature t = WeatherTransformer.transformTemperatureYahooToTemperature(j);
+        Temperature t = WeatherTransformer.transformJsonToTemperature(j);
         assertEquals(37, t.getCurrentTemperature(),1);
     }
 
@@ -123,7 +123,7 @@ public class WeatherTransformerTest {
      * Test of transformDayYahooToDay method, of class WeatherTransformer.
      */
     @Test
-    public void testTransformDayYahooToDay() {
+    public void testTransformJsonToDay() {
         ObjectMapper map = new ObjectMapper();
         JsonNode j = null;
         try {
@@ -132,7 +132,7 @@ public class WeatherTransformerTest {
         catch (IOException ex) {
             Logger.getLogger(WeatherTransformerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Day d = WeatherTransformer.transformDayYahooToDay(j);
+        Day d = WeatherTransformer.transformJsonToDay(j);
         assertEquals("Wed", d.getName());
     }
     

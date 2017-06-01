@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffDAO {
 
     private MySqlConnect connect;
-    
+
     @Autowired
     AtmosphereDAO atDao;
     @Autowired
@@ -36,9 +36,14 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
     TemperatureDAO tempDao;
     @Autowired
     WindDAO windDao;
-    
+
     public void insert(Day o) {
         Day d = o;
+        atDao.insert(d.getAtmosphere());
+        locDao.insert(d.getLocation());
+        tempDao.insert(d.getTemp());
+        windDao.insert(d.getWind());
+
         int idAt = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(), "atmosphere"));
         int idLoc = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(), "location"));
         int idTemp = Integer.parseInt(LastId.buscarUltimoId(connect.getConnection(), "temperature"));
@@ -56,8 +61,8 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
 
     public Day update(int id, Day o) {
         Day d = o;
-        int idAt=0, idLoc=0, idTemp=0, idWind=0;
-        int[]vec = idsComponentsDay(d.getDate()); //0:idLoc 1:idAt 2:idTemp 3:idWind
+        int idAt = 0, idLoc = 0, idTemp = 0, idWind = 0;
+        int[] vec = idsComponentsDay(d.getDate(),d.getLocation().getCity(),d.getLocation().getCountry()); //0:idLoc 1:idAt 2:idTemp 3:idWind
         if (d.getAtmosphere() == null) {
             idTemp = vec[2];
             tempDao.update(idTemp, d.getTemp());
@@ -66,12 +71,11 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
                     + " where day.idDay=" + id;
             executeUp(sql, connect.getConnection());
         } else {
-            
             idLoc = vec[0];
             idAt = vec[1];
             idTemp = vec[2];
             idWind = vec[3];
-            
+
             atDao.update(idAt, d.getAtmosphere());
             locDao.update(idLoc, d.getLocation());
             tempDao.update(idTemp, d.getTemp());
@@ -184,11 +188,11 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         return r;
     }
 
-    public int[] idsComponentsDay(String dateDay) {
+    public int[] idsComponentsDay(String dateDay, String location, String country) {
         int[] vec = new int[4];
         String sql = "select d.*\n"
-                + "from forecast.day d\n"
-                + "where d.date = '" + dateDay + "'";
+                + "from forecast.day d, forecast.location l \n"
+                + "where d.date = '" + dateDay + "' and l.idLocation=d.idLocation and l.city='"+location+"' and l.country='"+country+"'";
         ResultSet rs = executeQ(sql, connect.getConnection());
         try {
             while (rs.next()) {
@@ -203,10 +207,10 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         return vec;
     }
 
-    public int selectByDateId(String dateDay) {
-        String sql = "SELECT d.* \n"
-                + "FROM forecast.day d\n"
-                + "WHERE d.date = '" + dateDay + "'";
+    public int selectByDateIdAndLocation(String dateDay, String location, String country) {
+        String sql = "SELECT d.*, l.* \n"
+                + "FROM forecast.day d, forecast.location l \n"
+                + "WHERE d.date = '" + dateDay + "' and l.idLocation=d.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
         int id = 0;
         ResultSet rs = executeQ(sql, connect.getConnection());
         try {
@@ -219,15 +223,15 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         return id;
     }
 
-    public Day selectByDate(String dateDay) {
+    public Day selectByDateAndLocation(String dateDay, String location, String country) {
         Day d = null;
 
-        String sql = "SELECT d.* \n"
-                + "FROM forecast.day d\n"
-                + "WHERE d.date = " + dateDay;
+        String sql = "SELECT d.*, l.* \n"
+                + "FROM forecast.day d, forecast.location l\n"
+                + "WHERE d.date = '" + dateDay + "' and l.idLocation=d.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
         ResultSet rs = executeQ(sql, connect.getConnection());
         try {
-            if (rs.getRow() == 0) {
+            if (!rs.next()) {
                 return d = null;
             } else {
                 try {
@@ -242,21 +246,17 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
 
                     String sqlLoc = "SELECT l.* "
                             + "FROM forecast.location l, forecast.day d "
-                            + "WHERE d.date ='" + dateDay + "' and d.idLocation = l.idLocation";
+                            + "WHERE d.date ='" + dateDay + "' and d.idLocation = l.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
                     rs = executeQ(sqlLoc, connect.getConnection());
-                    String city = "";
-                    String country = "";
                     String region = "";
                     while (rs.next()) {
-                        city = rs.getString("city");
-                        country = rs.getString("country");
                         region = rs.getString("region");
                     }
-                    Location l = new Location(city, country, region);
+                    Location l = new Location(location, country, region);
 
-                    String sqlTemp = "SELECT t.* "
-                            + "FROM forecast.temperature t, forecast.day d "
-                            + "WHERE d.date =" + dateDay + " and d.idTemperature = t.idTemperature";
+                    String sqlTemp = "SELECT t.*\n"
+                            + "FROM forecast.temperature t, forecast.day d, forecast.location l\n"
+                            + "WHERE d.date ='" + dateDay + "' and t.idTemperature=d.idTemperature and d.idLocation = l.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
                     rs = executeQ(sqlTemp, connect.getConnection());
                     float cTemp = 0;
                     float hTemp = 0;
@@ -268,9 +268,9 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
                     }
                     Temperature t = new Temperature(cTemp, hTemp, lTemp);
 
-                    String sqlWind = "SELECT w.* "
-                            + "FROM forecast.wind w, forecast.day d "
-                            + "WHERE d.date =" + dateDay + " and d.idWind = w.idWind";
+                    String sqlWind = "SELECT w.* \n"
+                            + "FROM forecast.wind w, forecast.day d, forecast.location l \n"
+                            + "WHERE d.date ='" + dateDay + "' and w.idWind = d.idWind and l.idLocation=d.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
                     rs = executeQ(sqlWind, connect.getConnection());
                     String dir = "";
                     float spd = 0;
@@ -280,9 +280,9 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
                     }
                     Wind w = new Wind(dir, spd);
 
-                    String sqlAt = "SELECT a.* "
-                            + "FROM forecast.atmosphere a, forecast.day d "
-                            + "WHERE d.date ='" + dateDay + "' and d.idAtmosphere = a.idAtmosphere";
+                    String sqlAt = "SELECT a.* \n"
+                            + "FROM forecast.atmosphere a, forecast.day d, forecast.location l \n"
+                            + "WHERE d.date ='" + dateDay + "' and a.idAtmosphere=d.idAtmosphere and l.idLocation=d.idLocation and l.city = '" + location + "' and l.country='" + country + "'";
                     rs = executeQ(sqlAt, connect.getConnection());
                     float hum = 0;
                     float pres = 0;
@@ -306,32 +306,34 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         return d;
     }
 
-    public Day lastUpdate() {
+    public Day lastUpdateForLocation(String location, String country) throws SQLException {
         Day d = null;
         String dateInputPattern = "dd MMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(dateInputPattern);
+
         Date dateM = null;
-        Date dateN = null;
-        String sql = "select d.date from forecast.day d";
-        ResultSet r;
-        r = executeQ(sql, connect.getConnection());
+        Date dateDB = null;
+
+        String date = "";
+
+        String sql = "select d.*,l.* from forecast.day d, forecast.location l \n"
+                + "where l.idLocation = d.idLocation and l.city='" + location + "' and l.country='" + country + "'";
+        ResultSet rs = executeQ(sql, connect.getConnection());
         try {
-            while (r.next()) {
-                if (r.isFirst()) {
-                    dateM = sdf.parse(r.getString("date"));
-                } else {
-                    dateN = sdf.parse(r.getString("date"));
-                    if (dateM.compareTo(dateN) > 0) {
-                        dateM = dateN;
+            dateM = sdf.parse("01 jun 2000");
+            do {
+                if (rs.next()) {
+                    date = rs.getString("date");
+                    dateDB = sdf.parse(date);
+                    if (dateDB.after(dateM) == true) {
+                        dateM = dateDB;
                     }
                 }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+            } while (rs.next());
+        } catch (SQLException | ParseException ex) {
             Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        d = selectByDate(sdf.format(dateM));
+        d = selectByDateAndLocation(sdf.format(dateM), location, country);
         return d;
     }
 }

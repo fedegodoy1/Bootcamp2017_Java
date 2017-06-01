@@ -1,4 +1,3 @@
-
 package pattern.proxy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,43 +25,31 @@ import service.ServiceWeather;
  * @author federico
  */
 @Component
-public class ProxyWeather implements ClientYahooWeather{
-    
-    @Resource(name="clientYahooWeather")
+public class ProxyWeather implements ClientYahooWeather {
+
+    @Resource(name = "clientYahooWeather")
     private ClientYahooWeather clientYahooWeather;
     @Autowired
     ServiceWeather service;
-    
-    @Override
-    public String getForecast(String query, String format){
-        boolean ok = Validations.checkInet();
-        ObjectMapper map = new ObjectMapper();
-        Day d = null;
-        String jsonInString="";
-        if(ok){
-            try {
-                JsonNode j = map.readTree(clientYahooWeather.getForecast(query,format));
-                int id = j.get("query").get("results").get("place").get("woeid").asInt();
-                String yqlForecast="select * from weather.forecast where woeid = "+id;
-                j = map.readTree(clientYahooWeather.getForecast(yqlForecast,format));
 
-                d = WeatherTransformer.transformDayYahooToDay(j);
-                service.insertDay(d);
-                jsonInString = map.writeValueAsString(d);
-            } catch (IOException ex) {
-                Logger.getLogger(ProxyWeather.class.getName()).log(Level.SEVERE, null, ex);
+    //APLICAR ADAPTER KILOMETERS Y CELSIUS
+    @Override
+    public String getForecast(String location, String country) {
+        ObjectMapper map = new ObjectMapper();
+        String jsonInString = "";
+        try {
+            String yqlId = "select woeid from geo.places(1) where text=\" " + location + ", " + country + "\"";
+            JsonNode j = map.readTree(clientYahooWeather.getForecast(yqlId, "json"));
+            if (Validations.checkResponse(j) != true) {
+                return "There are not response for location:" + location + " and country: " + country;
+            } else {
+                int id = j.get("query").get("results").get("place").get("woeid").asInt();
+                String yqlForecast = "select * from weather.forecast where woeid = " + id;
+                j = map.readTree(clientYahooWeather.getForecast(yqlForecast, "json"));
+                jsonInString = j.toString();
             }
-        }else{
-            //Search for the last update in database
-            d = service.searchLastUpdate();
-            try {
-                jsonInString = map.writeValueAsString(d);
-            } catch (JsonProcessingException ex) {
-                Logger.getLogger(ProxyWeather.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if(d==null){
-                return "Error";
-            }
+        } catch (IOException ex) {
+            Logger.getLogger(ProxyWeather.class.getName()).log(Level.SEVERE, null, ex);
         }
         return jsonInString;
     }

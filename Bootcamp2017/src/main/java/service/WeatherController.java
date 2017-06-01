@@ -46,15 +46,24 @@ public class WeatherController {
     @Autowired
     ServiceWeather service;
     @Autowired
-    AdapterYahooResponseToString adapter;
+    AdapterYahooResponseToDay adapter;
+    
+    public WeatherController(ServiceWeather service){
+        this.service = service;
+    }
     
     @RequestMapping(value = "/forecast/currentday/{country}/{location}", method = RequestMethod.GET, produces = "application/json")
     public Response forecastCurrentDay(@PathVariable("country") String country, @PathVariable("location") String location) {
         Day d = null;
         try {
-            d = adapter.requestForecastCurrentDay(location, country);
+            d= service.requestForecastCurrentDay(location,country);
             if(d == null){
                 return Response.serverError().entity("You are not connected - In data base there are not forecast for "+location).build();
+            }
+            else{
+                if(d.getName().equals("Location and country incorrects")){ 
+                    return Response.serverError().entity("There are not response for location: "+location+" and country:"+country).build();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(WeatherController.class.getName()).log(Level.SEVERE, null, ex);

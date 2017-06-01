@@ -23,7 +23,7 @@ import pattern.builder.WindBuilder;
  */
 @Component
 public class WeatherTransformer {
-    public static Atmosphere transformAtmosphereYahooToAtmosphere(JsonNode j){
+    public static Atmosphere transformJsonToAtmosphere(JsonNode j){
         Atmosphere a = new AtmosphereBuilder().
                 withHumidity((float)j.get("query").get("results").get("channel").get("atmosphere").get("humidity").asDouble()).
                 withPressure((float)j.get("query").get("results").get("channel").get("atmosphere").get("pressure").asDouble()).
@@ -32,7 +32,7 @@ public class WeatherTransformer {
         return a;
     }
     
-    public static Location transformLocationYahooToLocation(JsonNode j){
+    public static Location transformJsonToLocation(JsonNode j){
         Location l = new LocationBuilder().
                 withCity(j.get("query").get("results").get("channel").get("location").get("city").asText()).
                 withCountry( j.get("query").get("results").get("channel").get("location").get("country").asText()).
@@ -41,7 +41,7 @@ public class WeatherTransformer {
         return l;
     }
     
-    public static Wind transformWindYahooToWind(JsonNode j){
+    public static Wind transformJsonToWind(JsonNode j){
         Wind w = new WindBuilder().
                 withDirection(j.get("query").get("results").get("channel").get("wind").get("direction").asText()).
                 withSpeed((float)j.get("query").get("results").get("channel").get("wind").get("speed").asDouble()).
@@ -49,7 +49,7 @@ public class WeatherTransformer {
         return w;
     }
     
-    public static Temperature transformTemperatureYahooToTemperature(JsonNode j){
+    public static Temperature transformJsonToTemperature(JsonNode j){
         Temperature t = new TemperatureBuilder().
                 withCTemp((float)j.get("query").get("results").get("channel").get("item").get("condition").get("temp").asDouble()).
                 withHTemp((float)j.get("query").get("results").get("channel").get("item").get("forecast").get(0).get("high").asDouble()).
@@ -58,12 +58,12 @@ public class WeatherTransformer {
         return t;
     }
     
-    public static Day transformDayYahooToDay(JsonNode j){
+    public static Day transformJsonToDay(JsonNode j){
         
-        Atmosphere a = transformAtmosphereYahooToAtmosphere(j);
-        Location l = transformLocationYahooToLocation(j);
-        Wind w = transformWindYahooToWind(j);
-        Temperature t = transformTemperatureYahooToTemperature(j);
+        Atmosphere a = transformJsonToAtmosphere(j);
+        Location l = transformJsonToLocation(j);
+        Wind w = transformJsonToWind(j);
+        Temperature t = transformJsonToTemperature(j);
         Day d = new DayBuilder().
                 withName(j.get("query").get("results").get("channel").get("item").get("forecast").get(0).get("day").asText()).
                 withDate(j.get("query").get("results").get("channel").get("item").get("forecast").get(0).get("date").asText()).

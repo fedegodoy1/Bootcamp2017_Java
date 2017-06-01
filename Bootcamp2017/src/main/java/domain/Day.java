@@ -16,7 +16,9 @@ public class Day{
     private Temperature temp;
     
     public Day(){ }
-
+    public Day(String name){
+        this.name = name;
+    }
     public Day(String name, String date, String description, Location location, Atmosphere atmosphere, Wind wind, Temperature temp) {
         this.name = name;
         this.date = date;
@@ -26,7 +28,7 @@ public class Day{
         this.wind = wind;
         this.temp = temp;
     }
-
+    
     public String getName() {
         return name;
     }

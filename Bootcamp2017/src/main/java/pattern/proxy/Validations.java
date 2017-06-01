@@ -1,5 +1,6 @@
 package pattern.proxy;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,5 +28,15 @@ public class Validations {
             Logger.getLogger(Validations.class.getName()).log(Level.SEVERE, null, ex);
         }
         return connected;
+    }
+    
+    public static boolean checkResponse(JsonNode j){
+        boolean response = false;
+        if(!j.get("query").get("results").isNull()){
+            return response = true;
+        }
+        else {
+            return response;
+        }
     }
 }
