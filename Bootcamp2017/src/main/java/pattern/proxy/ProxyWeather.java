@@ -4,11 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Day;
-import domain.yahoo.AtmosphereYahoo;
-import domain.yahoo.DayYahoo;
-import domain.yahoo.LocationYahoo;
-import domain.yahoo.TemperatureYahoo;
-import domain.yahoo.WindYahoo;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,9 +24,7 @@ public class ProxyWeather implements ClientYahooWeather {
 
     @Resource(name = "clientYahooWeather")
     private ClientYahooWeather clientYahooWeather;
-    @Autowired
-    ServiceWeather service;
-
+    
     //APLICAR ADAPTER KILOMETERS Y CELSIUS
     @Override
     public String getForecast(String location, String country) {

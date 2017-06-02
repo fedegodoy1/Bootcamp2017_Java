@@ -47,15 +47,15 @@ public class MySqlConnectTest {
      */
     @Test
     public void testGetConnection(){
-//        System.out.println("getConnection");
-//        
-//        Connection result = MySqlConnect.getConnection();
-//        
-//        try {
-//            assertTrue(!result.isClosed());
-//        } catch (SQLException ex) {
-//            fail();
-//        }
+        System.out.println("getConnection");
+        
+        Connection result = MySqlConnect.getConnection();
+        
+        try {
+            assertTrue(!result.isClosed());
+        } catch (SQLException ex) {
+            fail();
+        }
     }
     
     public void testGetConnectionFail(){

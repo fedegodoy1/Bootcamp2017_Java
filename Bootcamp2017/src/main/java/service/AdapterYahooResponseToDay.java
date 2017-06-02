@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Day;
-import domain.yahoo.DayYahoo;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +25,19 @@ public class AdapterYahooResponseToDay implements YahooObject{
     ClientYahooWeather proxy;
     @Autowired
     WeatherTransformer weatherTransformer;
+    
+    public void setProxy(ClientYahooWeather p){
+        this.proxy = p;
+    }
+    
+    
     @Override
     public Day requestForecastCurrentDay(String location, String country){
         Day d = new Day();
         ObjectMapper map = new ObjectMapper();
         try {
             String response = proxy.getForecast(location, country);
+            
             if(response.equals("There are not response for location:" + location + " and country: " + country)){
                 d.setName("Location and country incorrects");
                 return d;

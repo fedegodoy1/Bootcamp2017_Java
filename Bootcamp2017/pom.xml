@@ -141,34 +141,37 @@
     <profiles>
         <profile>
             <id>development</id>
-            <activation>
-                <property>
-                    <name>entorno</name>
-                    <value>desa</value>
-                </property>
-            </activation>
             <properties>  
+                <environment>dev</environment>
                 <DATABASE_DRIVER>com.mysql.jdbc.Driver</DATABASE_DRIVER>
                 <DATABASE_URL>jdbc:mysql://localhost:3306/forecast</DATABASE_URL>
                 <USERNAME>root</USERNAME>
                 <PASSWORD>fedex10</PASSWORD>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>environment</name>
+                    <value>dev</value>
+                </property>
+            </activation>
         </profile>
         
         <profile>
             <id>test</id>
-            <activation>
-                <property>
-                    <name>entorno</name>
-                    <value>test</value>
-                </property>
-            </activation>
             <properties>  
+                <environment>test</environment>
                 <DATABASE_DRIVER>org.h2.Driver</DATABASE_DRIVER>
                 <DATABASE_URL>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</DATABASE_URL>
                 <USERNAME> </USERNAME>
                 <PASSWORD> </PASSWORD>
             </properties>
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>test</value>
+                </property>
+            </activation>
         </profile>
         
     </profiles>

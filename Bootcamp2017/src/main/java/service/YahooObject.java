@@ -6,7 +6,6 @@
 package service;
 
 import domain.Day;
-import domain.yahoo.DayYahoo;
 
 /**
  *

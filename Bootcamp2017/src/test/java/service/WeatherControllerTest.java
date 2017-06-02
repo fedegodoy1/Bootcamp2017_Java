@@ -72,6 +72,26 @@ public class WeatherControllerTest {
         
         verify(responseFromServiceMock);
     }
+    
+    @Test
+    public void testForecastCurrentDayForDayResponse() {
+        
+        String location = "cordoba";
+        String country = "argentina";
+        Day dayMock = EasyMock.createMock(Day.class);
+        ServiceWeather responseFromServiceMock = EasyMock.createMock(ServiceWeather.class);
+        
+        expect(dayMock.getName()).andReturn("Location and country incorrects");
+        expect(responseFromServiceMock.requestForecastCurrentDay(location, country)).andReturn(dayMock);
+        replay(responseFromServiceMock,dayMock);
+        
+        WeatherController weatherController= new WeatherController(responseFromServiceMock);
+        Response r = weatherController.forecastCurrentDay(country,location);
+        String expected = "There are not response for location: "+location+" and country:"+country;
+        assertEquals(expected, r.getEntity());
+        
+        verify(responseFromServiceMock, dayMock);
+    }
 
     /**
      * Test of allDays method, of class WeatherController.
