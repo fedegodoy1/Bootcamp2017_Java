@@ -15,7 +15,15 @@ public class Day{
     private Wind wind;
     private Temperature temp;
     
-    public Day(){ }
+    public Day(){
+        this.name="";
+        this.date="";
+        this.description="";
+        this.location = new Location();
+        this.atmosphere = new Atmosphere();
+        this.temp = new Temperature();
+        this.wind = new Wind();
+    }
     
     public Day(String name, String date, String description, Location location, Atmosphere atmosphere, Wind wind, Temperature temp) {
         this.name = name;

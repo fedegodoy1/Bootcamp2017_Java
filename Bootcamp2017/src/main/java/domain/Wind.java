@@ -10,7 +10,10 @@ public class Wind {
     private String direction;
     private float speed;
 
-    public Wind() { }
+    public Wind() { 
+        this.direction="";
+        this.speed=0;
+    }
     
     public Wind(String direction, float speed) {
         this.direction = direction;

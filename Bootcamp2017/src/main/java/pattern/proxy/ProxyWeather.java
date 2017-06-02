@@ -22,10 +22,16 @@ import service.ServiceWeather;
 @Component
 public class ProxyWeather implements ClientYahooWeather {
 
-    @Resource(name = "clientYahooWeather")
+    @Resource//(name = "clientYahooWeather")
     private ClientYahooWeather clientYahooWeather;
     
-    //APLICAR ADAPTER KILOMETERS Y CELSIUS
+    public ProxyWeather(){
+        
+    }
+    
+    public ProxyWeather(ClientYahooWeather c){
+        this.clientYahooWeather = c;
+    }
     @Override
     public String getForecast(String location, String country) {
         ObjectMapper map = new ObjectMapper();
@@ -35,11 +41,17 @@ public class ProxyWeather implements ClientYahooWeather {
             JsonNode j = map.readTree(clientYahooWeather.getForecast(yqlId, "json"));
             if (Validations.checkResponse(j) != true) {
                 return "There are not response for location:" + location + " and country: " + country;
-            } else {
+            } 
+            else {
                 int id = j.get("query").get("results").get("place").get("woeid").asInt();
                 String yqlForecast = "select * from weather.forecast where woeid = " + id;
                 j = map.readTree(clientYahooWeather.getForecast(yqlForecast, "json"));
-                jsonInString = j.toString();
+                if(Validations.checkResponse(j)!=true){
+                    return "There are not response for location:" + location + " and country: " + country;
+                }
+                else{
+                    jsonInString = j.toString();
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(ProxyWeather.class.getName()).log(Level.SEVERE, null, ex);

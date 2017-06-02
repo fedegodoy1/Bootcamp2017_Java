@@ -31,6 +31,8 @@ import domain.Temperature;
 import domain.Wind;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,35 +55,37 @@ public class WeatherController {
     }
     
     @RequestMapping(value = "/forecast/currentday/{country}/{location}", method = RequestMethod.GET, produces = "application/json")
-    public Response forecastCurrentDay(@PathVariable("country") String country, @PathVariable("location") String location) {
+    public ResponseEntity forecastCurrentDay(@PathVariable("country") String country, @PathVariable("location") String location) {
         Day d = null;
         try {
             d= service.requestForecastCurrentDay(location,country);
             if(d == null){
-                return Response.serverError().entity("You are not connected - In data base there are not forecast for "+location).build();
+                return new ResponseEntity<>("You are not connected - In data base there are not forecast for "+location,HttpStatus.NOT_FOUND);//.serverError().entity("You are not connected - In data base there are not forecast for "+location).build();
             }
             else{
                 if(d.getName().equals("Location and country incorrects")){ 
-                    return Response.serverError().entity("There are not response for location: "+location+" and country:"+country).build();
+                    return new ResponseEntity<>("There are not response for location: "+location+" and country:"+country,HttpStatus.NOT_FOUND);//Response.serverError().entity("There are not response for location: "+location+" and country:"+country).build();
                 }
             }
         } catch (Exception ex) {
             Logger.getLogger(WeatherController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return Response.status(Response.Status.OK).entity(d).build();
+        return new ResponseEntity<Day>(d,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/days/", method = RequestMethod.GET)
-    public ArrayList<Day> allDays() {
+    @RequestMapping(value = "/forecast/allextended/{country}/{location}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity allDays(@PathVariable("country") String country, @PathVariable("location") String location) {
         ArrayList<Day> days = new ArrayList<Day>();
-        days = service.requestAllDays();
-        return days;
-    }
-
-    @RequestMapping(value = "/day/{idday}", method = RequestMethod.GET)
-    public ArrayList<Day> day(@PathVariable("idday") String idday) {
-        ArrayList<Day> name = service.requestDay(idday);
-        return name;
+        days = service.requestAllDays(country,location);
+        if(days.isEmpty()){
+            return new ResponseEntity<>("You are not connected - In data base there are not forecast for "+location,HttpStatus.NOT_FOUND);
+        }
+        else{
+            if(days.get(0).getName().equals("Location and country incorrects")){
+                return new ResponseEntity<>("There are not response for location: "+location+" and country:"+country,HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(days,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/insertday", method = RequestMethod.POST)

@@ -15,9 +15,14 @@ import org.springframework.stereotype.Component;
 public class MilesImpl implements Miles{
     private float speed;
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    public MilesImpl(){
+        this.speed=0;
     }
+    @Override
+    public void setSpeed(float speed){
+        this.speed=speed;
+    }
+    
     
     @Override
     public float getSpeed(){

@@ -13,6 +13,7 @@ import domain.Temperature;
 import domain.Wind;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import mysql.MySqlConnect;
 import mysql.LastId;
@@ -62,7 +63,7 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
     public Day update(int id, Day o) {
         Day d = o;
         int idAt = 0, idLoc = 0, idTemp = 0, idWind = 0;
-        int[] vec = idsComponentsDay(d.getDate(),d.getLocation().getCity(),d.getLocation().getCountry()); //0:idLoc 1:idAt 2:idTemp 3:idWind
+        int[] vec = idsComponentsDay(d.getDate(), d.getLocation().getCity(), d.getLocation().getCountry()); //0:idLoc 1:idAt 2:idTemp 3:idWind
         if (d.getAtmosphere() == null) {
             idTemp = vec[2];
             tempDao.update(idTemp, d.getTemp());
@@ -86,6 +87,63 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
             executeUp(sql, connect.getConnection());
         }
         return d;
+    }
+
+    public ArrayList<Day> selectAllDaysForALocation(String location, String country) {
+        ArrayList<Day> list = new ArrayList();
+        Day d = null;
+        String sqlComplete = "SELECT * FROM forecast.day d,forecast.location l, forecast.temperature t, forecast.wind w, forecast.atmosphere a \n"
+                + "WHERE l.idLocation=d.idLocation and t.idTemperature=d.idTemperature and w.idWind=d.idWind and a.idAtmosphere=d.idAtmosphere and l.city='" + location + "' and l.country='" + country + "';";
+        ResultSet rs = executeQ(sqlComplete, connect.getConnection());
+        try {
+            
+            float hum = 0;
+            float pres = 0;
+            float vis = 0;
+            
+            String region = "";
+            
+            float cTemp = 0;
+            float hTemp = 0;
+            float lTemp = 0;
+            
+            String dir = "";
+            float spd = 0;
+            
+            String name = "";
+            String date = "";
+            String descr = "";
+            
+            while(rs.next()){
+                hum = rs.getFloat("humidity");
+                pres = rs.getFloat("pressure");
+                vis = rs.getFloat("visibility");
+                Atmosphere a = new Atmosphere(hum, pres, vis);
+                
+                region = rs.getString("region");
+                Location l = new Location(location, country, region);
+                
+                cTemp = rs.getFloat("currentTemperature");
+                hTemp = rs.getFloat("highTemperature");
+                lTemp = rs.getFloat("lowTemperature");
+                Temperature t = new Temperature(cTemp, hTemp, lTemp);
+                
+                dir = rs.getString("direction");
+                spd = rs.getFloat("speed");
+                Wind w = new Wind(dir, spd);
+                
+                name = rs.getString("name");
+                date = rs.getString("date");
+                descr = rs.getString("description");
+                
+                d = new Day(name, date, descr, l, a, w, t);
+                list.add(d);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     public Day select(int id) {
@@ -116,6 +174,7 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
                 city = rs.getString("city");
                 country = rs.getString("country");
                 region = rs.getString("region");
+                
             }
             Location l = new Location(city, country, region);
 
@@ -192,7 +251,7 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         int[] vec = new int[4];
         String sql = "select d.*\n"
                 + "from forecast.day d, forecast.location l \n"
-                + "where d.date = '" + dateDay + "' and l.idLocation=d.idLocation and l.city='"+location+"' and l.country='"+country+"'";
+                + "where d.date = '" + dateDay + "' and l.idLocation=d.idLocation and l.city='" + location + "' and l.country='" + country + "'";
         ResultSet rs = executeQ(sql, connect.getConnection());
         try {
             while (rs.next()) {
@@ -238,11 +297,11 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
                     String name = "";
                     String date = "";
                     String descr = "";
-                    while (rs.next()) {
+                    do {
                         name = rs.getString("name");
                         date = rs.getString("date");
                         descr = rs.getString("description");
-                    }
+                    } while (rs.next());
 
                     String sqlLoc = "SELECT l.* "
                             + "FROM forecast.location l, forecast.day d "
@@ -319,20 +378,46 @@ public class DayDAO extends BaseWeatherDAO implements WeatherDAO<Day>, CountOffD
         String sql = "select d.*,l.* from forecast.day d, forecast.location l \n"
                 + "where l.idLocation = d.idLocation and l.city='" + location + "' and l.country='" + country + "'";
         ResultSet rs = executeQ(sql, connect.getConnection());
-        try {
-            dateM = sdf.parse("01 jun 2000");
-            do {
-                if (rs.next()) {
-                    date = rs.getString("date");
-                    dateDB = sdf.parse(date);
-                    if (dateDB.after(dateM) == true) {
-                        dateM = dateDB;
+        rs.last();
+        int rows = rs.getRow();
+        if (rows == 1) {
+            rs.beforeFirst();
+            try {
+                dateM = sdf.parse("01 jun 2000");
+                do {
+                    if (rs.next()) {
+                        date = rs.getString("date");
+                        dateDB = sdf.parse(date);
+                        if (dateDB.after(dateM) == true) {
+                            dateM = dateDB;
+                        }
                     }
+                } while (rs.next());
+            } catch (SQLException | ParseException ex) {
+                Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            if (rows == 0) {
+                return d;
+            } else {
+                rs.beforeFirst();
+                try {
+                    dateM = sdf.parse("01 jun 2000");
+                    while (rs.next()) {
+                        if (rs.next()) {
+                            date = rs.getString("date");
+                            dateDB = sdf.parse(date);
+                            if (dateDB.after(dateM) == true) {
+                                dateM = dateDB;
+                            }
+                        }
+                    }
+                } catch (SQLException | ParseException ex) {
+                    Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } while (rs.next());
-        } catch (SQLException | ParseException ex) {
-            Logger.getLogger(DayDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
         d = selectByDateAndLocation(sdf.format(dateM), location, country);
         return d;
     }

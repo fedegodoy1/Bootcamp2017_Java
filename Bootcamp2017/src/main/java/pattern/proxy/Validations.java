@@ -32,7 +32,7 @@ public class Validations {
     
     public static boolean checkResponse(JsonNode j){
         boolean response = false;
-        if(!j.get("query").get("results").isNull()){
+        if(j.get("query").get("count").asInt()==1){
             return response = true;
         }
         else {

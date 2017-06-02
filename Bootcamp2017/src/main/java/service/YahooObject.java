@@ -6,11 +6,13 @@
 package service;
 
 import domain.Day;
+import java.util.ArrayList;
 
 /**
  *
  * @author federico
  */
 public interface YahooObject {
-    Day requestForecastCurrentDay(String query, String format);
+    Day requestForecastCurrentDay(String location, String country);
+    ArrayList<Day> requestForecastAllExtended(String location, String country);
 }

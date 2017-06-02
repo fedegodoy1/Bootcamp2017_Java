@@ -11,7 +11,11 @@ public class Location {
     private String country;
     private String region;
     
-    public Location() { }
+    public Location() {
+        this.city="";
+        this.country="";
+        this.region="";
+    }
     
     public Location(String city, String country, String region) {
         this.city = city;

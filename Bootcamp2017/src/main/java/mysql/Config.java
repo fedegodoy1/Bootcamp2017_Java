@@ -22,7 +22,7 @@ import org.springframework.core.env.Environment;
  * @author federico
  */
 @Configuration
-@PropertySource("file:C:/Users/federico/OneDrive/Documents/Bootcamp Globant/Bootcamp2017_Java/Bootcamp2017/target/classes/dbConfig.properties")
+@PropertySource("file:C:/Users/user/Documents/Fede/NetBeansProjects/Bootcamp2017_Java/Bootcamp2017/target/classes/dbConfig.properties")
 public class Config {
     @Autowired
     Environment env;

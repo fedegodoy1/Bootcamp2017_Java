@@ -10,5 +10,6 @@ package pattern.adapter;
  * @author federico
  */
 public interface Kilometers {
-    public float getSpeed();
+    float getSpeed();
+    void setSpeed(float speed);
 }

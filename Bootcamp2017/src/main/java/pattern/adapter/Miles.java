@@ -14,4 +14,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface Miles {
     float getSpeed();
+    void setSpeed(float speed);
 }

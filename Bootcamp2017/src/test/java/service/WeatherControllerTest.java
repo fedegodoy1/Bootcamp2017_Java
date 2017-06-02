@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -66,9 +67,9 @@ public class WeatherControllerTest {
         replay(responseFromServiceMock);
         
         WeatherController weatherController= new WeatherController(responseFromServiceMock);
-        Response r = weatherController.forecastCurrentDay(country,location);
+        ResponseEntity r = weatherController.forecastCurrentDay(country,location);
         String expected = "You are not connected - In data base there are not forecast for "+location;
-        assertEquals(expected, r.getEntity());
+        assertEquals(expected, r.getBody());
         
         verify(responseFromServiceMock);
     }
@@ -86,9 +87,9 @@ public class WeatherControllerTest {
         replay(responseFromServiceMock,dayMock);
         
         WeatherController weatherController= new WeatherController(responseFromServiceMock);
-        Response r = weatherController.forecastCurrentDay(country,location);
+        ResponseEntity r = weatherController.forecastCurrentDay(country,location);
         String expected = "There are not response for location: "+location+" and country:"+country;
-        assertEquals(expected, r.getEntity());
+        assertEquals(expected, r.getBody());
         
         verify(responseFromServiceMock, dayMock);
     }

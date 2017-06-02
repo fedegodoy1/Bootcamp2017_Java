@@ -48,18 +48,18 @@ public class ProxyWeatherTest {
      */
     @Test
     public void testGetForecast() {
-//        String location = "cordoba";
-//        String country = "argentina";
-//        String yql = "select woeid from geo.places(1) where text=\" " + location + ", " + country + "\"";
-//        String format = "json";
-//        ClientYahooWeather clientYahooWeatherMock = EasyMock.createMock(ClientYahooWeather.class);
-//        expect(clientYahooWeatherMock.getForecast(yql, format)).andReturn("{\"query\":{\"count\":0,\"created\":\"2017-06-02T04:12:10Z\",\"lang\":\"es-ES\",\"results\":null}}");
-//        replay(clientYahooWeatherMock);
-//        
-//        ClientYahooWeather proxy = new ProxyWeather(clientYahooWeatherMock);
-//        String response = proxy.getForecast(location, country);
-//        assertEquals("There are not response for location:" + location + " and country: " + country,response);
-//        verify(clientYahooWeatherMock);
+        String location = "cordoba";
+        String country = "argentina";
+        String yql = "select woeid from geo.places(1) where text=\" " + location + ", " + country + "\"";
+        String format = "json";
+        ClientYahooWeather clientYahooWeatherMock = EasyMock.createMock(ClientYahooWeather.class);
+        expect(clientYahooWeatherMock.getForecast(yql, format)).andReturn("{\"query\":{\"count\":0,\"created\":\"2017-06-02T04:12:10Z\",\"lang\":\"es-ES\",\"results\":null}}");
+        replay(clientYahooWeatherMock);
+        
+        ClientYahooWeather proxy = new ProxyWeather(clientYahooWeatherMock);
+        String response = proxy.getForecast(location, country);
+        assertEquals("There are not response for location:" + location + " and country: " + country,response);
+        verify(clientYahooWeatherMock);
     }
     
 }

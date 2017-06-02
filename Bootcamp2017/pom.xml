@@ -146,7 +146,7 @@
                 <DATABASE_DRIVER>com.mysql.jdbc.Driver</DATABASE_DRIVER>
                 <DATABASE_URL>jdbc:mysql://localhost:3306/forecast</DATABASE_URL>
                 <USERNAME>root</USERNAME>
-                <PASSWORD>fedex10</PASSWORD>
+                <PASSWORD>admin</PASSWORD>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

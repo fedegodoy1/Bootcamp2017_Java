@@ -10,7 +10,11 @@ public class Atmosphere {
     private float pressure;
     private float visibility;
 
-    public Atmosphere(){ }
+    public Atmosphere(){
+        this.humidity=0;
+        this.pressure=0;
+        this.visibility=0;
+    }
     
     public Atmosphere(float humidity, float pressure, float visibility) {
         this.humidity = humidity;

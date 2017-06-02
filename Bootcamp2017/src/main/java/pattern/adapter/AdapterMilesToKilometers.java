@@ -18,10 +18,18 @@ public class AdapterMilesToKilometers implements Kilometers{
     @Autowired
     private Miles miles;
     
+    public AdapterMilesToKilometers(Miles miles){
+        this.miles = miles;
+    }
+    
     @Override
     public float getSpeed(){
         float mph = miles.getSpeed();
         float kmh = 0;
         return kmh = (float)(mph*1.609);
+    }
+    
+    public void setSpeed(float speed){
+        this.setSpeed(speed);
     }
 }

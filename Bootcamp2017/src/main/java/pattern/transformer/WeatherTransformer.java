@@ -71,4 +71,30 @@ public class WeatherTransformer {
                 build();
         return d;
     }   
+    
+    public static Temperature transformJsonToTemperatureOfDayExtended(JsonNode j, int i){
+        Temperature t = new TemperatureBuilder().
+                withCTemp(0).
+                withHTemp((float)j.get("query").get("results").get("channel").get("item").get("forecast").get(i).get("high").asDouble()).
+                withLTemp((float)j.get("query").get("results").get("channel").get("item").get("forecast").get(i).get("low").asDouble()).
+                build();
+        return t;
+    }   
+    
+    public static Day transformJsonToDayExtended(JsonNode j,int i){
+        Temperature t = transformJsonToTemperatureOfDayExtended(j,i);
+        Atmosphere a = new Atmosphere();
+        Location l = transformJsonToLocation(j);
+        Wind w = new Wind();
+        Day d = new DayBuilder().
+                withName(j.get("query").get("results").get("channel").get("item").get("forecast").get(i).get("day").asText()).
+                withDate(j.get("query").get("results").get("channel").get("item").get("forecast").get(i).get("date").asText()).
+                withDescription(j.get("query").get("results").get("channel").get("item").get("forecast").get(i).get("text").asText()).
+                withTemperature(t).
+                witLocation(l).
+                withWind(w).
+                withAtmosphere(a).
+                build();
+        return d;
+    }
 }
