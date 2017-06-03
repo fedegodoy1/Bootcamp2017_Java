@@ -43,12 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author federico
  */
-@RestController("MyApp")
+@RestController()
+@RequestMapping("WeatherApp")
 public class WeatherController {
     @Autowired
-    ServiceWeather service;
-    @Autowired
-    AdapterYahooResponseToDay adapter;
+    ServiceWeather service;//deberia ir interfaz
     
     public WeatherController(ServiceWeather service){
         this.service = service;

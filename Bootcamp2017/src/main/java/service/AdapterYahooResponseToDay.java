@@ -12,8 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pattern.adapter.AdapterMilesToKilometers;
-import pattern.adapter.Miles;
 import pattern.transformer.WeatherTransformer;
 
 /**
@@ -27,11 +25,7 @@ public class AdapterYahooResponseToDay implements YahooObject {
     ClientYahooWeather proxy;
     @Autowired
     WeatherTransformer weatherTransformer;
-    @Autowired
-    Miles miles;
-    @Autowired
-    AdapterMilesToKilometers adapterMilesToKilometers;
-            
+    
 
     public void setProxy(ClientYahooWeather p) {
         this.proxy = p;
@@ -47,12 +41,11 @@ public class AdapterYahooResponseToDay implements YahooObject {
             if (response.equals("There are not response for location:" + location + " and country: " + country)) {
                 d.setName("Location and country incorrects");
                 return d;
-            } else {
+            } 
+            else {
                 JsonNode j = map.readTree(response);
                 d = weatherTransformer.transformJsonToDay(j);//transformer
                 
-                miles.setSpeed(d.getWind().getSpeed());
-                d.getWind().setSpeed(adapterMilesToKilometers.getSpeed());
             }
             //d = map.readValue(response, Day.class);
         } catch (IOException ex) {
@@ -79,8 +72,6 @@ public class AdapterYahooResponseToDay implements YahooObject {
                 for (int i = 0; i < 10; i++) {
                     if (i == 0) {
                         d = weatherTransformer.transformJsonToDay(j);
-                        miles.setSpeed(d.getWind().getSpeed());
-                        d.getWind().setSpeed(adapterMilesToKilometers.getSpeed());
                         list.add(d);
                     } 
                     else {

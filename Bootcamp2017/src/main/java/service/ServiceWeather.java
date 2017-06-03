@@ -96,10 +96,6 @@ public class ServiceWeather {
 
     public ArrayList<Day> requestAddDay(Day d) {
         ArrayList<Day> r = new ArrayList<Day>();
-        atDAO.insert(d.getAtmosphere());
-        tempDAO.insert(d.getTemp());
-        locDAO.insert(d.getLocation());
-        windDAO.insert(d.getWind());
         dayDao.insert(d);
         r.add(d);
         return r;

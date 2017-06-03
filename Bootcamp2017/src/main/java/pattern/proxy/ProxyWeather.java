@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pattern.adapter.AdapterMilesToKilometers;
 import pattern.transformer.WeatherTransformer;
 import service.ClientYahooWeather;
 import service.ServiceWeather;
